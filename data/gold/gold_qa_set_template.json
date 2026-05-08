@@ -1,0 +1,44 @@
+[
+  {
+    "question": "Which UAE climate policies address renewable energy targets?",
+    "expected_answer": "The UAE Net Zero 2050 strategy and COP28 UAE Consensus discuss renewable energy and emissions reduction targets.",
+    "answer_type": "policy_graph_reasoning",
+    "required_entities": [
+      "UAE",
+      "Policy",
+      "Target",
+      "Renewable Energy"
+    ],
+    "source_documents": [
+      "uae_net_zero_2050",
+      "cop28_uae_consensus"
+    ],
+    "pages": [
+      "fill_page_after_ingestion"
+    ]
+  },
+  {
+    "question": "Which climate risks affect agriculture in the Middle East?",
+    "expected_answer": "Relevant risks may include heatwaves and water scarcity, supported by IPCC or regional climate documents.",
+    "answer_type": "risk_sector_region",
+    "required_entities": [
+      "ClimateRisk",
+      "Agriculture",
+      "Middle East"
+    ],
+    "source_documents": [
+      "ipcc_ar6_spm"
+    ],
+    "pages": [
+      "fill_page_after_ingestion"
+    ]
+  },
+  {
+    "question": "What information is not available about the capital of Neptune?",
+    "expected_answer": "The system should refuse because this is outside the climate document set.",
+    "answer_type": "adversarial_refusal",
+    "required_entities": [],
+    "source_documents": [],
+    "pages": []
+  }
+]
