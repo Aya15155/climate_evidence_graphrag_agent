@@ -1,13 +1,13 @@
 [
   {
     "question": "Which UAE climate policies address renewable energy targets?",
-    "expected_answer": "The UAE Net Zero 2050 strategy and COP28 UAE Consensus discuss renewable energy and emissions reduction targets.",
+    "expected_answer": "The UAE Net Zero 2050 strategy and the COP28 UAE Consensus discuss renewable energy expansion and emissions reduction targets.",
     "answer_type": "policy_graph_reasoning",
     "required_entities": [
       "UAE",
       "Policy",
-      "Target",
-      "Renewable Energy"
+      "Renewable Energy",
+      "Net Zero"
     ],
     "source_documents": [
       "uae_net_zero_2050",
@@ -17,14 +17,16 @@
       "fill_page_after_ingestion"
     ]
   },
+
   {
-    "question": "Which climate risks affect agriculture in the Middle East?",
-    "expected_answer": "Relevant risks may include heatwaves and water scarcity, supported by IPCC or regional climate documents.",
+    "question": "Which climate risks are most strongly connected to agriculture in the Middle East?",
+    "expected_answer": "Heatwaves, droughts, and water scarcity are repeatedly linked to agricultural vulnerability in Middle Eastern climate reports.",
     "answer_type": "risk_sector_region",
     "required_entities": [
       "ClimateRisk",
       "Agriculture",
-      "Middle East"
+      "Middle East",
+      "Water Scarcity"
     ],
     "source_documents": [
       "ipcc_ar6_spm"
@@ -33,9 +35,64 @@
       "fill_page_after_ingestion"
     ]
   },
+
+  {
+    "question": "How do climate reports connect sea level rise with infrastructure risks in Gulf countries?",
+    "expected_answer": "IPCC and regional climate reports associate sea level rise with coastal flooding, infrastructure damage, and urban vulnerability in Gulf countries.",
+    "answer_type": "multi_hop_climate_reasoning",
+    "required_entities": [
+      "Sea Level Rise",
+      "Infrastructure",
+      "Gulf Countries",
+      "Climate Risk"
+    ],
+    "source_documents": [
+      "ipcc_ar6_spm",
+      "regional_climate_risk_report"
+    ],
+    "pages": [
+      "fill_page_after_ingestion"
+    ]
+  },
+
+  {
+    "question": "Why is green hydrogen considered important in the UAE Net Zero 2050 strategy?",
+    "expected_answer": "Green hydrogen is discussed as a low-carbon energy solution that supports industrial decarbonization and renewable energy transition goals.",
+    "answer_type": "technology_policy_reasoning",
+    "required_entities": [
+      "Green Hydrogen",
+      "UAE",
+      "Net Zero",
+      "Renewable Energy"
+    ],
+    "source_documents": [
+      "uae_net_zero_2050"
+    ],
+    "pages": [
+      "fill_page_after_ingestion"
+    ]
+  },
+
+  {
+    "question": "How are carbon capture technologies discussed in COP28 climate documents?",
+    "expected_answer": "COP28 climate documents describe carbon capture technologies as tools for reducing industrial emissions and supporting decarbonization efforts.",
+    "answer_type": "technology_climate_reasoning",
+    "required_entities": [
+      "Carbon Capture",
+      "Industrial Emissions",
+      "COP28"
+    ],
+    "source_documents": [
+      "cop28_uae_consensus"
+    ],
+    "pages": [
+      "fill_page_after_ingestion"
+    ]
+  },
+
   {
     "question": "What information is not available about the capital of Neptune?",
-    "expected_answer": "The system should refuse because this is outside the climate document set.",
+    "expected_answer": "The system should refuse because this question is unrelated to the climate evidence document collection.",
     "answer_type": "adversarial_refusal",
     "required_entities": [],
     "source_documents": [],

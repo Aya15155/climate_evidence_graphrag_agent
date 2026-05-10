@@ -1,16 +1,10 @@
-run_id: d1_placeholder
-random_seed: 42
-automl:
-  method: optuna
-  objective: maximize_ndcg_at_5_with_latency_constraint
-  trials: 60
-  best_params:
-    k: null
-    svd_dim: null
-    hybrid_weight: null
-    normalization: null
 metrics:
-  recall_at_5: null
-  ndcg_at_5: null
-  p95_latency_ms: null
-notes: Fill after Salma runs the D1 AutoML experiment.
+  mrr: 0.611111111111111
+  ndcg_at_5: 0.7103099178571526
+  p95_latency_ms: 11.47012710571289
+  recall_at_5: 1.0
+retrieval:
+  hybrid_weight: 0.9148118624570614
+  k: 15
+  normalization: minmax
+  svd_dim: 300
