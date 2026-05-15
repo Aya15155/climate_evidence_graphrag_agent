@@ -1,13 +1,13 @@
 # member1_d1_data_section.md
 
-Write your own implementation details, decisions, results, screenshots, and failure cases here.
+# D1 — Dataset and Gold Q/A Preparation
 
-For D1, my role was preparing the dataset structure and the initial gold Q/A evaluation set for the Climate Evidence GraphRAG Agent project.
+For D1, my role was preparing the dataset foundation for the Climate Evidence GraphRAG Agent. I focused on organizing the climate document metadata, preparing the initial gold Q/A set, and making sure the data is useful for retrieval evaluation later.
 
-I worked on expanding the climate metadata file by adding more climate-related reports and policy documents such as UAE Net Zero 2050, COP28 UAE Consensus, IPCC AR6, and other climate and renewable energy reports. The metadata includes fields like countries, regions, climate risks, technologies, sectors, policies, and indicators. These fields will later help with retrieval, filtering, and GraphRAG tasks.
+I prepared the metadata structure for 30 real climate PDFs. The documents include IPCC climate science reports, UNEP reports, COP28 and UNFCCC documents, UAE climate strategy documents, arXiv climate-AI papers, and other open-access climate or sustainability papers. For each document, I included climate-specific metadata such as countries, regions, sectors, climate risks, technologies, policies, targets, indicators, and topics.
 
-I also worked on the gold Q/A dataset and expanded it with around 30 climate-focused evaluation questions. The questions include topics related to climate policy, renewable energy, adaptation, mitigation, climate risks, UAE climate initiatives, and COP28. I also included a few adversarial questions to test whether the system can correctly refuse unrelated questions.
+I also prepared a gold Q/A set with 30 climate-focused questions. The questions cover climate policy, mitigation, adaptation, renewable energy, UAE climate initiatives, COP28, climate risks, and climate-AI topics. I also included adversarial/refusal questions to test if the system avoids answering unrelated questions.
 
-One challenge during D1 was that the ingestion pipeline was not implemented yet, so real page numbers and chunk IDs were not available. Because of this, placeholder values were temporarily used.
+For retrieval evaluation, each gold question is connected to a source document, page number or page range, and relevant chunk IDs once ingestion is completed. This will help the team check whether the retrieval system can find the correct evidence before generating an answer.
 
-Overall, my contribution in D1 focused on building a clean and climate-specific dataset foundation that will support later retrieval evaluation, GraphRAG integration, and citation verification.
+My D1 contribution supports the next stages of the project because the metadata and gold Q/A set will be used for hybrid retrieval, AutoML tuning, GraphRAG, citation verification, and final evaluation.
