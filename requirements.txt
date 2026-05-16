@@ -1,18 +1,33 @@
+# API and UI
 fastapi
 uvicorn
 streamlit
 pydantic
 python-dotenv
+
+# Data processing
 pandas
 numpy
+PyYAML
+requests
+tqdm
+
+# PDF processing
+pdfplumber
+
+# Retrieval and ML
 scikit-learn
 rank-bm25
 sentence-transformers
 qdrant-client
+
+# Databases
 pymongo
 neo4j
-pdfplumber
+
+# Online learning and AutoML
 river
 optuna
+
+# Testing
 pytest
-PyYAML
