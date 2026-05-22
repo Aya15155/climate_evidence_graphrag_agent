@@ -1,159 +1,116 @@
-# Climate Evidence GraphRAG Agent
+# Climate Evidence GraphRAG Agent - D1 Clean Base + D2 Notebook-First Repo
 
-A trusted AI assistant for climate policy, sustainability, climate science, and climate-AI research PDFs.
+This repository is cleaned to focus on **D1 completed evidence** and **D2 Retrieval Stack & Graph Build** work.
 
-This project is **not just a PDF reader**. PDFs are the evidence sources, while the core intelligence comes from a **Climate Evidence Knowledge Graph** that connects countries, policies, climate risks, sectors, technologies, targets, indicators, findings, organizations, and source documents.
+D1 has already been submitted. The D1 artifacts are kept here as the repaired baseline for D2.
 
-## What is included in this zip
+## Current scope
+
+- **D1 completed:** AutoML Track A, River online learner, ADWIN, prequential plot, run card, and final report.
+- **D2 in progress:** ingestion, MongoDB/Qdrant storage, BM25+dense hybrid retrieval, Neo4j graph build, `/search` API, metrics, and notebook evidence.
+
+## Important rule from D1 feedback
+
+Each member must commit their own technical work from their own GitHub account. The AI chat logs must show real steering: asking why, comparing options, debugging, verifying outputs, and explaining decisions.
+
+## Main D1 files
+
+| Purpose | File |
+|---|---|
+| D1 final report | `D1_Technical_Report_2_Pages.docx` |
+| D1 report PDF copy | `D1_Technical_Report_2_Pages.pdf` |
+| D1 run card | `configs/run_card_d1.yaml` |
+| D1 AutoML script | `src/retrieval/automl_tuner.py` |
+| D1 River learner | `src/learning/river_topic_classifier.py` |
+| D1 metrics | `reports/tables/d1_baseline_vs_automl_metrics.csv` |
+| D1 prequential plot | `reports/figures/prequential_accuracy_plot.png` |
+
+## Notebook-first D2 submission rule
+
+The doctor specifically asked for Jupyter notebooks for the next deliverables. Therefore, D2 should be submitted as executed notebooks with visible outputs.
+
+Main integrated notebook:
 
 ```text
-src/                  Python starter code for ingestion, retrieval, graph, GraphRAG, learning, tuning, safety, API, UI, and evaluation
-tests/                Smoke tests for the starter pipeline
-configs/              Main config and D1 run card template
-data/                 Metadata, gold Q/A, and fine-tuning templates
-docs/                 Word plan + architecture graph + climate knowledge graph
-reports/              Member report-section templates and final-report outline
-notes/                Improvement notes and file-by-file comments
-README.md             Setup, run steps, member ownership, and deliverable map
+notebooks/D2_retrieval_graph_build.ipynb
 ```
 
-Every Python file in `src/` and `tests/` now includes **inline improvement comments** at the top. These comments explain what should be upgraded before submission.
+Member notebooks:
 
-## Project idea
-
-The user asks a climate question, such as:
-
-- Which UAE climate policies address renewable energy targets?
-- Which climate risks affect agriculture in the Middle East?
-- Which documents discuss green hydrogen as a mitigation technology?
-- What climate impacts are linked to sea level rise?
-- Which AI methods are used in climate forecasting papers?
-
-The system should:
-
-1. Extract climate entities from the question.
-2. Search Neo4j for connected climate concepts and evidence documents.
-3. Retrieve supporting chunks using BM25 + dense Qdrant search.
-4. Blend graph-guided results with global hybrid retrieval.
-5. Generate an answer with document/page citations.
-6. Verify citations using source pinning.
-7. Learn from feedback using River + ADWIN.
-
-## Architecture and graph diagrams
-
-- Architecture graph: `docs/architecture_graph.png`
-- Climate Evidence Knowledge Graph: `docs/climate_evidence_kg_graph.png`
-- Updated Word plan with the first design style: `docs/Climate_Project_Plan_First_Design_UPDATED.docx`
-
-## Team members and ownership
-
-| Member | Name | Main role |
+| Member | Notebook | Main proof |
 |---|---|---|
-| Member 1 | Reem | Data, ingestion, gold Q/A, page citation verification |
-| Member 2 | Salma | Retrieval, hybrid search, AutoML, retrieval evaluation |
-| Member 3 | Rana | Climate Evidence Knowledge Graph and GraphRAG |
-| Member 4 | Aaya | Online learning, ADWIN drift, feedback adaptation, QLoRA |
-| Member 5 | Alia | API, UI, safety, evaluation, README, report compilation |
+| Reem | `notebooks/D2_01_Reem_ingestion_data_quality.ipynb` | ingestion, metadata, chunk/page provenance |
+| Salma | `notebooks/D2_02_Salma_retrieval_comparison.ipynb` | BM25 vs dense vs hybrid metrics |
+| Rana | `notebooks/D2_03_Rana_graph_build_cypher.ipynb` | graph schema, counts, Cypher evidence |
+| Aaya | `notebooks/D2_04_Aaya_online_retrieval_adaptation.ipynb` | online learner compared with static retrieval |
+| Alia | `notebooks/D2_05_Alia_api_tests_integration.ipynb` | `/search`, tests, reproducible run steps |
 
-Each member writes their own report section. Alia may compile the final report, but she should not write everyone else’s technical work.
+The `.py` files in `src/` are backend implementation modules only. They support the notebooks, but they do not replace notebook evidence.
 
-## Deliverables and highlighted files
+## Main D2 evidence files
 
-### D1 — Streaming Learner and AutoML
+| Purpose | File |
+|---|---|
+| D2 integrated notebook | `notebooks/D2_retrieval_graph_build.ipynb` |
+| D2 notebook map | `notebooks/README_D2_NOTEBOOKS.md` |
+| D2 checklist | `deliverables/D2/D2_ACCEPTANCE_CHECKLIST.md` |
+| D2 run card | `configs/d2_run_card.yaml` |
+| D2 eval queries | `data/eval/d2_eval_queries.csv` |
+| D2 starter-code provenance | `provenance/starter_code_log_d2.md` |
+| D2 ingestion table | `reports/tables/d2_ingestion_summary.csv` |
+| D2 search metrics | `reports/tables/d2_search_metrics.csv` |
+| D2 graph counts | `reports/tables/d2_graph_counts.csv` |
+| D2 online-vs-static comparison | `reports/tables/d2_online_vs_static.csv` |
 
-- Reem: `data/metadata/papers_metadata_template.csv`, `data/gold/gold_qa_set_template.json`, `reports/member1_d1_data_section.md`
-- Salma: `src/retrieval/automl_tuner.py`, `configs/run_card_d1.yaml`, `reports/member2_d1_automl_section.md`
-- Rana: `src/graph/graph_schema.md`, `reports/member3_d1_graph_plan_section.md`
-- Aaya: `src/learning/river_topic_classifier.py`, `src/learning/drift_detector.py`, `reports/member4_d1_online_learning_section.md`
-- Alia: `src/evaluation/retrieval_metrics.py`, `reports/member5_d1_eval_section.md`
+## D2 member ownership - edit your notebook and assigned modules
 
-### D2 — Retrieval Stack and Graph Build
+| Member | Owns for D2 | Notebook | Main folders/files to edit |
+|---|---|---|---|
+| Reem | Ingestion, metadata, page maps, data quality | `notebooks/D2_01_Reem_ingestion_data_quality.ipynb` | `src/ingest/`, `data/metadata/`, `reports/tables/d2_ingestion_summary.csv` |
+| Salma | BM25, dense, hybrid retrieval, retrieval metrics | `notebooks/D2_02_Salma_retrieval_comparison.ipynb` | `src/retrieval/`, `src/evaluation/retrieval_metrics.py`, `reports/tables/d2_search_metrics.csv` |
+| Rana | Neo4j climate graph, Cypher queries, graph evidence | `notebooks/D2_03_Rana_graph_build_cypher.ipynb` | `src/graph/`, `docs/diagrams/`, `reports/tables/d2_graph_counts.csv` |
+| Aaya | River/ADWIN connection to retrieval, online-vs-static comparison | `notebooks/D2_04_Aaya_online_retrieval_adaptation.ipynb` | `src/learning/`, `reports/tables/d2_online_vs_static.csv` |
+| Alia | FastAPI `/search`, tests, integration README | `notebooks/D2_05_Alia_api_tests_integration.ipynb` | `src/api/`, `tests/`, `deliverables/D2/README_D2.md` |
 
-- Reem: `src/ingest/pdf_loader.py`, `src/ingest/chunker.py`, `src/ingest/mongo_store.py`, `src/ingest/qdrant_store.py`, `src/ingest/run_ingest.py`
-- Salma: `src/retrieval/bm25_retriever.py`, `src/retrieval/dense_retriever.py`, `src/retrieval/hybrid_retriever.py`, `src/retrieval/fusion.py`
-- Rana: `src/graph/neo4j_builder.py`, `src/graph/cypher_queries.py`, `src/graph/graph_schema.md`, `docs/climate_evidence_kg_graph.png`
-- Aaya: `src/learning/feedback_adapter.py`
-- Alia: `src/api/main.py`, `docs/architecture_graph.png`, `reports/member5_d2_api_eval_section.md`
+## D2 depth requirement
 
-### D3 — GraphRAG, Evaluation, and Safety
+D2 should not only show that the code runs. It must compare systems:
 
-- Reem: `src/ingest/page_verifier.py`, `reports/member1_d3_data_quality_section.md`
-- Salma: `src/evaluation/retrieval_metrics.py`, `reports/tables/d3_retrieval_ablation.csv`
-- Rana: `src/rag/graphrag_executor.py`, `src/rag/prompt_builder.py`, `src/rag/citation_builder.py`
-- Aaya: `src/learning/feedback_adapter.py`, `reports/member4_d3_adaptation_section.md`
-- Alia: `src/safety/source_pinning.py`, `src/safety/citation_verifier.py`, `src/evaluation/rag_metrics.py`, `src/evaluation/ablation.py`
+1. BM25-only retrieval
+2. Dense-only retrieval
+3. Hybrid retrieval
+4. Static hybrid vs topic-gated/adaptive hybrid, if feasible
+5. Graph-supported search examples using Neo4j Cypher
 
-### D4 — SLM Tuning and Final Demo
+Minimum metrics:
 
-- Reem: `data/tuning/finetune_qa_template.jsonl`, `reports/member1_d4_dataset_section.md`
-- Salma: `src/evaluation/latency.py`, `reports/tables/d4_retrieval_latency.csv`
-- Rana: `src/rag/graphrag_executor.py`, `src/graph/cypher_queries.py`, `reports/member3_d4_graph_final_section.md`
-- Aaya: `src/tuning/prepare_finetune_data.py`, `src/tuning/finetune_qlora.py`, `src/tuning/inference_tuned.py`, `reports/tuning_card.md`
-- Alia: `src/ui/streamlit_app.py`, `tests/`, `README.md`, `demo_script.md`, `reports/final_report_outline.md`
+- Recall@5
+- NDCG@5 or MRR
+- p95 latency
+- top-k examples with document/page provenance
 
 ## Setup
 
-```bash
+```powershell
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env
+.\.venv\Scripts\activate
+python -m pip install -r requirements.txt
 ```
 
-## Start databases
+If using the stores for D2:
 
-```bash
+```powershell
 docker compose up -d
 ```
 
-This starts:
+## Run D1 reproduction
 
-- MongoDB on port 27017
-- Qdrant on port 6333
-- Neo4j on ports 7474 and 7687
-
-## Run ingestion
-
-Put PDFs in `data/pdfs/`, fill `data/metadata/papers_metadata_template.csv`, then run:
-
-```bash
-python -m src.ingest.run_ingest
+```powershell
+python scripts/build_d1_proxy_eval_set.py
+python src/retrieval/automl_tuner.py --n-trials 30
+python src/learning/river_topic_classifier.py
 ```
 
-## Run API
+## D2 work starts here
 
-```bash
-uvicorn src.api.main:app --reload
-```
-
-Endpoints:
-
-- `GET /stats`
-- `POST /ingest`
-- `POST /search`
-- `POST /ask`
-- `POST /feedback`
-
-## Run UI
-
-```bash
-streamlit run src/ui/streamlit_app.py
-```
-
-## Run tests
-
-```bash
-pytest tests/ -v
-```
-
-## Notes for improvement
-
-See:
-
-- `notes/improvements.md`
-- `notes/code_improvement_comments.md`
-- the improvement comments at the top of each Python file
-
-## Important safety rule
-
-The answer generator must answer only from retrieved evidence. If the retrieved chunks do not support a claim, the answer should say that the evidence is not available in the document set. This is especially important for climate claims, statistics, COP commitments, and policy targets.
+Open and complete the notebooks in `notebooks/`. Do not leave TODO placeholders in the final D2 submission.

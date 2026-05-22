@@ -1,7 +1,6 @@
-# API and UI
+# API
 fastapi
 uvicorn
-streamlit
 pydantic
 python-dotenv
 
@@ -28,6 +27,7 @@ neo4j
 # Online learning and AutoML
 river
 optuna
+matplotlib
 
 # Testing
 pytest

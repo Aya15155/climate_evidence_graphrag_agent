@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-05-17T20:54:04",
+  "generation_method": "page_grounded_proxy_from_exact_source_page",
+  "source_chunks_path": "data/sample/sample_chunks.json",
+  "output_path": "data/gold/d1_retrieval_eval_set.json",
+  "n_questions": 120,
+  "seed": 42,
+  "all_items_need_manual_review": true,
+  "question_types": [
+    "page_grounded_proxy"
+  ]
+}

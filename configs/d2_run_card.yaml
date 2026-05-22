@@ -1,0 +1,25 @@
+﻿deliverable: D2
+name: retrieval_stack_and_graph_build
+status: placeholder_not_final
+seed: 42
+corpus:
+  pdf_dir: data/pdfs
+  metadata: data/metadata/papers_metadata.csv
+stores:
+  mongodb: TODO
+  qdrant: TODO
+  neo4j: TODO
+retrieval:
+  systems_to_compare:
+    - bm25_only
+    - dense_only
+    - hybrid
+    - topic_gated_hybrid
+metrics:
+  - recall_at_5
+  - ndcg_at_5
+  - mrr
+  - p95_latency_ms
+notes:
+  - Fill this from actual D2 notebook runs.
+  - Do not leave TODO values in final submission.

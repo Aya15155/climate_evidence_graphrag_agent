@@ -1,13 +1,36 @@
-# member1_d1_data_section.md
+# Member 1 D1 Section — Dataset and Proxy Benchmark
 
-# D1 — Dataset and Gold Q/A Preparation
+For D1, I prepared the retrieval data foundation for the Climate Evidence GraphRAG Agent.
 
-For D1, my role was preparing the dataset foundation for the Climate Evidence GraphRAG Agent. I focused on organizing the climate document metadata, preparing the initial gold Q/A set, and making sure the data is useful for retrieval evaluation later.
+## Corpus
 
-I prepared the metadata structure for 30 real climate PDFs. The documents include IPCC climate science reports, UNEP reports, COP28 and UNFCCC documents, UAE climate strategy documents, arXiv climate-AI papers, and other open-access climate or sustainability papers. For each document, I included climate-specific metadata such as countries, regions, sectors, climate risks, technologies, policies, targets, indicators, and topics.
+- 300 open-access climate-related PDFs
+- 49,541 extracted page-aware chunks
+- metadata CSV with document IDs, titles, authors, venues, year, PDF paths, topics, countries, regions, sectors, technologies, policies, targets, and indicators
 
-I also prepared a gold Q/A set with 30 climate-focused questions. The questions cover climate policy, mitigation, adaptation, renewable energy, UAE climate initiatives, COP28, climate risks, and climate-AI topics. I also included adversarial/refusal questions to test if the system avoids answering unrelated questions.
+## Benchmark repair
 
-For retrieval evaluation, each gold question is connected to a source document, page number or page range, and relevant chunk IDs once ingestion is completed. This will help the team check whether the retrieval system can find the correct evidence before generating an answer.
+The first automatically generated retrieval set was preserved as:
 
-My D1 contribution supports the next stages of the project because the metadata and gold Q/A set will be used for hybrid retrieval, AutoML tuning, GraphRAG, citation verification, and final evaluation.
+```text
+data/gold/d1_retrieval_eval_set_legacy_autogen.json
+```
+
+During D1 verification we found that some of its question labels were not truly anchored to the page named in the question. To avoid reporting misleading retrieval scores, I prepared a repaired page-grounded proxy benchmark:
+
+```text
+data/gold/d1_retrieval_eval_set.json
+```
+
+The repaired set contains 120 questions generated from exact source pages and is rebuilt by:
+
+```bash
+python scripts/build_d1_proxy_eval_set.py
+```
+
+Each item keeps page evidence, source-document IDs, and relevant chunk IDs for the target page. Because the set is still automatically generated, every row remains marked `needs_manual_review=true`.
+
+## Why this matters for D1
+
+The repaired benchmark gives the AutoML experiment a more honest supervised signal and avoids inflated or misleading results from the earlier draft labels. It is suitable for D1 comparison, while a manually reviewed benchmark should replace it in later deliverables.
+

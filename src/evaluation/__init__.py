@@ -1,6 +1,6 @@
-# ------------------------------------------------------------
-# Improvement comments for this starter file:
-# - Improvement: use the same 30 gold Q/A examples across D1, D2, D3, and D4 for fair comparison.
-# - Improvement: report Recall@5, NDCG@5, MRR, faithfulness, answer relevance, hallucinated citations, and p95 latency.
-# ------------------------------------------------------------
+﻿"""Evaluation helpers kept for D1/D2.
 
+D1 uses retrieval metrics for AutoML evaluation.
+D2 should reuse retrieval metrics and latency helpers for BM25-only, dense-only,
+hybrid, and online/topic-gated retrieval comparisons.
+"""

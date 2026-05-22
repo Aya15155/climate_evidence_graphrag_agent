@@ -1,8 +1,8 @@
-# ------------------------------------------------------------
-# Improvement comments for this starter file:
-# - Improvement: replace demo responses with real calls into ingestion, retrieval, GraphRAG, feedback, and stats services.
-# - Improvement: validate request/response schemas and return clear error messages for demo robustness.
-# ------------------------------------------------------------
+﻿"""FastAPI entrypoint for the D1/D2 repo scope.
+
+D2 should connect `/search` to the hybrid retrieval stack and return document/page
+provenance. `/ask` remains a lightweight placeholder until the later GraphRAG stage.
+"""
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -18,7 +18,7 @@ class FeedbackRequest(BaseModel):
 
 @app.get("/stats")
 def stats():
-    return {"project": "Climate Evidence GraphRAG Agent", "status": "starter", "graph": "climate evidence knowledge graph"}
+    return {"project": "Climate Evidence GraphRAG Agent", "status": "D1 complete; D2 in progress"}
 
 @app.post("/ingest")
 def ingest():
@@ -26,12 +26,12 @@ def ingest():
 
 @app.post("/search")
 def search(req: AskRequest):
-    return {"query": req.question, "results": [], "note": "Connect HybridRetriever here."}
+    return {"query": req.question, "results": [], "note": "D2 TODO: connect BM25+dense hybrid retrieval here."}
 
 @app.post("/ask")
 def ask(req: AskRequest):
-    return {"question": req.question, "answer": "Connect ClimateGraphRAGExecutor here.", "citations": []}
+    return {"question": req.question, "answer": "D2 scope keeps /ask as a placeholder; use /search for retrieval evidence.", "citations": []}
 
 @app.post("/feedback")
 def feedback(req: FeedbackRequest):
-    return {"message": "Feedback recorded placeholder", "helpful": req.helpful}
+    return {"message": "D2 TODO: connect feedback to River/adaptive retrieval.", "helpful": req.helpful}

@@ -361,6 +361,8 @@ def plot_prequential_accuracy(
 ) -> Path:
     """Generate rolling accuracy plot for reports/figures."""
 
+    import matplotlib
+    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     output_path = Path(output_path)
