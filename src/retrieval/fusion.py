@@ -2,6 +2,8 @@ import numpy as np
 
 
 def minmax_normalize(scores):
+    """Map scores to [0, 1].  Fragile to outliers — one extreme BM25 score
+    compresses all others near zero, hurting the weighted sum."""
     scores = np.array(scores, dtype=float)
     if scores.max() == scores.min():
         return np.ones_like(scores)
@@ -9,6 +11,8 @@ def minmax_normalize(scores):
 
 
 def zscore_normalize(scores):
+    """Shift scores to zero mean / unit variance.  More outlier-robust than
+    min-max but can produce negatives, which distort the weighted sum."""
     scores = np.array(scores, dtype=float)
     std = scores.std()
     if std == 0:
@@ -41,12 +45,16 @@ def fuse_results(
     normalization="minmax",
     top_k=5,
 ):
-    """Weighted-sum fusion after min-max or z-score normalisation.
+    """Weighted-sum fusion after score normalisation.
 
-    RRF is the safer default when score scales differ — use rrf_fuse_results
-    for production. This function is kept for min-max/zscore comparison.
+    BM25 scores are unbounded (0–30+) while dense cosine scores live in [0, 1].
+    Normalisation brings them to the same scale before combining, but both
+    min-max and z-score are query-dependent — the same document can get a
+    different normalised score depending on what else is in the result list.
+    Use rrf_fuse_results for production; keep this for ablation comparisons.
     """
     if normalization == "rrf":
+        # Shortcut: if caller passes normalization='rrf', delegate to RRF
         return rrf_fuse_results(bm25_results, dense_results, top_k=top_k)
 
     fused = {}
@@ -71,14 +79,17 @@ def rrf_fuse_results(
     k: int = 60,
     top_k: int = 5,
 ):
-    """Reciprocal Rank Fusion (RRF).
+    """Reciprocal Rank Fusion — the recommended fusion method.
 
-    Score = sum over retrievers of 1/(k + rank).  k=60 is the standard
-    constant from Cormack et al. 2009.  RRF is scale-invariant: it does not
-    matter that BM25 scores are unbounded term-frequency sums while dense
-    cosine similarities live in [0, 1].  Only rank position counts, so the
-    two retrievers contribute equally regardless of score magnitude — making
-    RRF the safest choice whenever BM25 and dense scores have different scales.
+    score(doc) = Σ  1 / (k + rank(doc))
+                retrievers
+
+    Why RRF is safest when BM25 and dense scores have different scales:
+    - It only uses rank position, not score magnitude
+    - BM25 returning score=22 and dense returning score=0.71 for the same
+      document doesn't matter — both contribute equally via their rank
+    - k=60 is the standard constant from Cormack et al. 2009; it dampens
+      the advantage of top-ranked documents without needing any tuning
     """
     scores: dict[str, dict] = {}
 
@@ -94,5 +105,6 @@ def rrf_fuse_results(
 
     results = sorted(scores.values(), key=lambda x: x["rrf_score"], reverse=True)[:top_k]
     for r in results:
+        # Alias so downstream code can always read "fused_score"
         r["fused_score"] = r["rrf_score"]
     return results
