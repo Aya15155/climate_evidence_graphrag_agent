@@ -294,6 +294,17 @@ class ClimateGraphBuilder:
         processed = 0
         errors = 0
         with self.driver.session() as session:
+            session.run(
+                """
+                MATCH (f:Finding)
+                WHERE NOT (f)-[:SUPPORTED_BY]->(:Document)
+                  AND (
+                    f.extraction_method IN ['manual', 'llm_extracted', 'metadata_grounded_demo']
+                    OR f.finding_id STARTS WITH 'd2_demo_finding_'
+                  )
+                DETACH DELETE f
+                """
+            )
             for raw in records:
                 rec = self._normalize_finding(raw)
                 try:
