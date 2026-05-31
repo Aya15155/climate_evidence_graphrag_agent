@@ -8,7 +8,7 @@ The doctor questioned unclear starter-code origin in D1, so D2 must explicitly r
 
 | Notebook/component | Owner | Source | What was changed by member | How verified |
 |---|---|---|---|---|
-| `notebooks/D2_01_Reem_ingestion_data_quality.ipynb` | Reem | TODO | TODO | TODO |
+| `notebooks/D2_01_Reem_ingestion_data_quality.ipynb` | Reem | Starter template provided in repo; all code written by Reem with AI assistance | Replaced TODO cells with working ingestion pipeline; added PDF count, chunk count, metadata audit, page-map examples, 3 chunk provenance examples, quality issues table, summary CSV | Ran all cells with ragenv kernel; verified real outputs (300 PDFs, 7588 pages, 57939 chunks) |
 | `notebooks/D2_02_Salma_retrieval_comparison.ipynb` | Salma | TODO | TODO | TODO |
 | `notebooks/D2_03_Rana_graph_build_cypher.ipynb` | Rana | TODO | TODO | TODO |
 | `notebooks/D2_04_Aaya_online_retrieval_adaptation.ipynb` | Aaya | TODO | TODO | TODO |

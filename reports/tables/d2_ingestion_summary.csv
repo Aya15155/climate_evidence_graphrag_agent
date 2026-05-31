@@ -1,0 +1,10 @@
+metric,value,notes
+metadata_rows_loaded,300,from papers_metadata.csv
+pdfs_found_on_disk,300,out of 300 records
+pdfs_missing_on_disk,0,pdf_path not found
+pdfs_skipped_load_error,0,pdfplumber error
+total_pages_extracted,7588,summed across all loaded PDFs
+total_chunks_created,57939,chunk_size=600 overlap=80
+chunk_length_min,1,chars
+chunk_length_median,600,chars
+chunk_length_max,600,chars

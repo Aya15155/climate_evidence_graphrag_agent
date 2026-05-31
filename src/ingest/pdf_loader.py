@@ -26,8 +26,16 @@ def load_pdf_pages(pdf_path: str | Path, document_id: str) -> List[PageText]:
         raise ImportError("Install pdfplumber to parse PDFs: pip install pdfplumber") from exc
 
     pages: List[PageText] = []
-    with pdfplumber.open(str(pdf_path)) as pdf:
-        for i, page in enumerate(pdf.pages, start=1):
-            text = page.extract_text() or ""
-            pages.append(PageText(document_id=document_id, page_number=i, text=text))
+    try:
+        with pdfplumber.open(str(pdf_path)) as pdf:
+            for i, page in enumerate(pdf.pages, start=1):
+                try:
+                    text = page.extract_text() or ""
+                except Exception:
+                    # Scanned / image-only page: keep the page in the map
+                    # with empty text so page numbers stay correct for citations
+                    text = ""
+                pages.append(PageText(document_id=document_id, page_number=i, text=text))
+    except Exception as exc:
+        raise RuntimeError(f"Failed to load PDF '{pdf_path}': {exc}") from exc
     return pages
