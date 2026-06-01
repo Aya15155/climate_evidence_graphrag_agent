@@ -25,22 +25,36 @@ class HybridRetriever:
         self.bm25_weight = bm25_weight
         self.normalization = normalization
 
-    def search(self, query: str, k: int = 5, filters: dict | None = None):
-        # Fetch 20 candidates from each retriever so fusion has enough
-        # overlap to work with; final top-k is selected after merging.
+    def search(
+        self,
+        query: str,
+        k: int = 5,
+        filters: dict | None = None,
+        bm25_weight: float | None = None,
+    ):
+        if bm25_weight is None:
+            bm25_weight = self.bm25_weight
+
+        bm25_weight = max(0.0, min(1.0, bm25_weight))
+
         bm25_results = self.bm25.search(query, k=20)
+
         dense_results = (
             self.dense.search(query, k=20, filters=filters)
             if self.dense else []
         )
-        # Filters only apply to dense — BM25 has no metadata index.
-        # RRF then re-ranks the merged pool by position, not raw score.
+
         if self.normalization == "rrf":
-            return rrf_fuse_results(bm25_results, dense_results, top_k=k)
+            return rrf_fuse_results(
+                bm25_results,
+                dense_results,
+                top_k=k,
+            )
+
         return fuse_results(
             bm25_results,
             dense_results,
-            bm25_weight=self.bm25_weight,
+            bm25_weight=bm25_weight,
             normalization=self.normalization,
             top_k=k,
         )
