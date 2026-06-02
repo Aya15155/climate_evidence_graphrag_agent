@@ -31,4 +31,3 @@ matplotlib
 
 # Testing
 pytest
-httpx

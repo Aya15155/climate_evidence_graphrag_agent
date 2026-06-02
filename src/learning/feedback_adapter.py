@@ -47,14 +47,9 @@ class FeedbackAdapter:
         self.step = step
         self.min_weight = min_weight
         self.max_weight = max_weight
-        self.topic_priors = {"policy_governance": 0.65, "uae_cop28": 0.65, "mitigation": 0.55, "adaptation": 0.50, "climate_science": 0.40, "technology_innovation": 0.40, "global": default_bm25_weight,}
-
         self.topic_weights: Dict[str, float] = defaultdict(lambda: default_bm25_weight)
-
-        for topic, weight in self.topic_priors.items():
-            self.topic_weights[topic] = weight
         self.feedback_counts: Dict[str, int] = defaultdict(int)
-        
+
     def get_weights(self, query_topic: Optional[str] = None) -> dict[str, float]:
         """Return the current hybrid weights for a topic."""
 
@@ -65,12 +60,6 @@ class FeedbackAdapter:
             "bm25_weight": round(bm25_weight, 4),
             "dense_weight": round(1.0 - bm25_weight, 4),
         }
-
-    def get_bm25_weight(self, query_topic: Optional[str] = None) -> float:
-        """Return only the BM25 weight for the retriever."""
-        return self.get_weights(query_topic)["bm25_weight"]
-    
-
 
     def update(
         self,
