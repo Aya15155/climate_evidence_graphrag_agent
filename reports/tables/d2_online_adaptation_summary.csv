@@ -1,3 +1,4 @@
 method,Topic source,BM25 weight source,Recall@5,MRR@5,nDCG@5,Answer citation hit rate,Prequential topic accuracy,Mean latency ms,Final mean BM25 weight,Final mean dense weight,Notes
 adaptive,River prediction,FeedbackAdapter per-topic weights,0.58,0.4482,0.4821,0.3533,0.7833,232.0272,0.4801,0.5199,Aaya River + FeedbackAdapter online adaptation
 static,none,fixed 0.50 / 0.50,0.5767,0.4502,0.4809,0.3517,0.7833,219.0019,0.5,0.5,Salma hybrid retriever baseline
+topic_gated,River prediction,fixed topic profile,0.59,0.4578,0.4899,0.3717,0.7833,236.4819,0.5228,0.4772,Aaya River topic routing on hybrid baseline

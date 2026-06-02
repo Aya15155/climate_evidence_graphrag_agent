@@ -1,5 +1,5 @@
 metric,static_mean,adaptive_mean,adaptive_minus_static,adaptive_helped_queries,adaptive_hurt_queries,same_queries
-recall@5,0.5767,0.585,0.0083,8,3,589
-mrr@5,0.4502,0.4561,0.0059,60,51,489
-ndcg@5,0.4809,0.4891,0.0083,112,108,380
-citation_hit,0.3517,0.3667,0.015,34,25,541
+recall@5,0.5767,0.58,0.0033,6,4,590
+mrr@5,0.4502,0.4482,-0.002,25,36,539
+ndcg@5,0.4809,0.4821,0.0013,57,76,467
+citation_hit,0.3517,0.3533,0.0017,8,7,585
