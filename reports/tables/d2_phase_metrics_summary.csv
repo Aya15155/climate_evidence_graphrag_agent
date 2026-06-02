@@ -1,0 +1,10 @@
+method,phase,Recall@5,MRR@5,nDCG@5,Citation hit,Topic accuracy,Mean BM25
+adaptive,concept_drift,0.4889,0.297,0.3479,0.1778,0.0222,0.4886
+adaptive,stable_post_drift,0.5652,0.5043,0.5179,0.4596,0.9565,0.5376
+adaptive,stable_pre_drift,0.6189,0.4749,0.5123,0.3725,0.8997,0.4987
+static,concept_drift,0.4333,0.3161,0.3334,0.2444,0.0222,0.5
+static,stable_post_drift,0.559,0.4726,0.4886,0.4037,0.9565,0.5
+static,stable_pre_drift,0.6218,0.4745,0.5153,0.3553,0.8997,0.5
+topic_gated,concept_drift,0.4778,0.2739,0.3294,0.1444,0.0222,0.5167
+topic_gated,stable_post_drift,0.5652,0.4852,0.5057,0.4286,0.9565,0.5472
+topic_gated,stable_pre_drift,0.6304,0.4926,0.5239,0.404,0.8997,0.5132
