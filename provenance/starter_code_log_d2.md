@@ -18,7 +18,7 @@ The doctor questioned unclear starter-code origin in D1, so D2 must explicitly r
 
 | File/component | Owner | Source | What was changed by member | How verified |
 |---|---|---|---|---|
-| `src/ingest/pdf_loader.py` | Reem | TODO | TODO | TODO |
+| `src/ingest/pdf_loader.py` | Reem | Starter file provided in repo with improvement comments | Added per-page try/except for scanned pages; wrapped full PDF open in RuntimeError handler so corrupted files skip cleanly and page map stays intact | Ran run_ingest on 300 PDFs; all processed without pipeline crash |
 | `src/retrieval/hybrid_retriever.py` | Salma | TODO | TODO | TODO |
 | `src/graph/neo4j_builder.py` | Rana | TODO | TODO | TODO |
 | `src/learning/feedback_adapter.py` | Aaya | TODO | TODO | TODO |
