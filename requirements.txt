@@ -1,4 +1,4 @@
-# API
+﻿# API
 fastapi
 uvicorn
 pydantic
@@ -15,7 +15,7 @@ tqdm
 pdfplumber
 
 # Retrieval and ML
-scikit-learn
+scikit-learn==1.7.2
 rank-bm25
 sentence-transformers
 qdrant-client
@@ -31,3 +31,4 @@ matplotlib
 
 # Testing
 pytest
+

@@ -1,2 +1,2 @@
-static_hybrid_baseline_mean_latency_ms,adaptive_online_routing_mean_latency_ms,adaptive_minus_static_ms
-450.2923,300.4727,-149.8196
+static_mean_latency_ms,adaptive_mean_latency_ms,adaptive_minus_static_ms
+244.4913,220.1345,-24.3569

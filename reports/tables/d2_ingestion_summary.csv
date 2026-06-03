@@ -8,3 +8,5 @@ total_chunks_created,57939,chunk_size=600 overlap=80
 chunk_length_min,1,chars
 chunk_length_median,600,chars
 chunk_length_max,600,chars
+retrieval_chunks_persisted,49541,rows in data/sample/sample_chunks.json used by retrieval/API
+embedding_rows_persisted,49541,rows in chunks_tfidf_lsa.npy; vector_dim=128

@@ -1,25 +1,43 @@
 ﻿deliverable: D2
 name: retrieval_stack_and_graph_build
-status: placeholder_not_final
+status: final_candidate
 seed: 42
 corpus:
   pdf_dir: data/pdfs
   metadata: data/metadata/papers_metadata.csv
+  chunks_path: data/sample/sample_chunks.json
+  document_count: 300
+  total_pages: 7588
+  extracted_candidate_chunk_count: 57939
+  retrieval_chunk_count: 49541
+  embedding_matrix_shape: [49541, 128]
 stores:
-  mongodb: TODO
-  qdrant: TODO
-  neo4j: TODO
+  mongodb: docker-compose service configured; ingestion module src/ingest/mongo_store.py available; notebook evidence reports metadata/chunk provenance
+  qdrant: docker-compose service configured; dense retrieval uses cached TF-IDF/LSA matrix for local notebook/API reproducibility; qdrant_store.py available for vector-store seeding
+  neo4j: docker-compose service configured; graph notebook loads/queries Neo4j and exports reports/tables/d2_graph_counts.csv
 retrieval:
-  systems_to_compare:
+  endpoint: POST /search
+  api_file: src/api/main.py
+  systems_compared:
     - bm25_only
-    - dense_only
-    - hybrid
-    - topic_gated_hybrid
+    - dense_tfidf_lsa
+    - hybrid_minmax
+    - hybrid_rrf
+  selected_for_api: hybrid_rrf
+  chunks_path: data/sample/sample_chunks.json
+  dense_cache: data/embeddings/chunks_tfidf_lsa.npy
 metrics:
-  - recall_at_5
-  - ndcg_at_5
-  - mrr
-  - p95_latency_ms
+  retrieval_table: reports/tables/d2_search_metrics.csv
+  online_table: reports/tables/d2_online_vs_static.csv
+  graph_counts: reports/tables/d2_graph_counts.csv
+  ingestion_summary: reports/tables/d2_ingestion_summary.csv
+seed_script: scripts/seed_d2_stores.py
+validation:
+  notebooks_executed: true
+  pytest: 4 passed
+  api_search_returns_provenance: true
 notes:
-  - Fill this from actual D2 notebook runs.
-  - Do not leave TODO values in final submission.
+  - D2 uses executed Jupyter notebooks as primary evidence, per doctor feedback.
+  - scikit-learn may warn when loading the cached TF-IDF/SVD object if the local sklearn version differs from the cache creation version; tests still pass.
+  - /ask answer generation remains D3 GraphRAG scope; /search is the D2 retrieval endpoint.
+
