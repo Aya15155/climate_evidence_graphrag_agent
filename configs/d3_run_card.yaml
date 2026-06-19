@@ -1,0 +1,36 @@
+deliverable: D3
+name: graphrag_executor_evaluation_safety
+status: scaffold_placeholder_peft_qlora_required
+scope_note: >
+  Original brief has D3 GraphRAG/evaluation/safety and D4 tuning/final demo separately.
+  PEFT/QLoRA tuning is included in D3, so final-demo/tuning evidence is required.
+inputs:
+  d2_chunks: data/sample/sample_chunks.json
+  d2_embeddings: data/embeddings/chunks_tfidf_lsa.npy
+  d2_metadata: data/metadata/papers_metadata.csv
+  d2_graph_counts: reports/tables/d2_graph_counts.csv
+expected_outputs:
+  gold_qa: data/gold/d3_gold_qa.csv
+  page_citation_check: reports/tables/page_citation_check.csv
+  retrieval_ablation: reports/tables/d3_retrieval_ablation.csv
+  graph_guided_results: reports/tables/d3_graph_guided_results.csv
+  online_comparison: reports/tables/d3_online_retrieval_comparison.csv
+  safety_before_after: reports/tables/d3_safety_before_after.csv
+  rag_eval_metrics: reports/tables/d3_rag_eval_metrics.csv
+notebooks:
+  shared: notebooks/D3_graphrag_eval_safety.ipynb
+  reem: notebooks/D3_01_Reem_page_citation_verification.ipynb
+  salma: notebooks/D3_02_Salma_retrieval_ablation.ipynb
+  rana: notebooks/D3_03_Rana_graphrag_executor.ipynb
+  aaya: notebooks/D3_04_Aaya_online_graphrag_adaptation.ipynb
+  alia: notebooks/D3_05_Alia_safety_rag_evaluation.ipynb
+  required_peft_qlora_final_scope: notebooks/D3_06_Final_Demo_Tuning_Merged_Scope.ipynb
+validation:
+  notebook_json_validated: false
+  pytest_required: true
+  no_secrets_required: true
+
+required_tuning_outputs:
+  tuning_qa: data/tuning/finetune_qa.jsonl
+  tuning_comparison: reports/tables/d3_or_final_zero_shot_vs_tuned.csv
+  tuning_latency: reports/tables/d3_tuning_latency.csv
