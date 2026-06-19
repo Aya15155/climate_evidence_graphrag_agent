@@ -1,0 +1,304 @@
+# D3 GraphRAG Design Document
+## Climate Evidence GraphRAG Agent — Deliverable 3
+
+---
+
+## PART 0 — ASSUMPTION CHALLENGES
+
+Before writing a single line of code, these assumptions must be examined.
+
+---
+
+### Assumption 1 — "Graph retrieval always adds value"
+**Challenge:** The graph was built from metadata (topics, countries, sectors, policies) — not from PDF text. A query about "solar PV efficiency improvements since 2020" may find *no* graph path because the corpus metadata does not tag solar PV papers with year-filtered findings. Vector search will outperform graph retrieval here. GraphRAG must detect this and fall back gracefully.
+
+**Design consequence:** Every pipeline run must score graph contribution. If graph_hits < 2 or graph chunks overlap > 80% with hybrid chunks, log `retrieval_type = hybrid_fallback` and skip graph blending.
+
+---
+
+### Assumption 2 — "Entity extraction is straightforward"
+**Challenge:** The graph uses slugified IDs (`solar_pv`, `are`, `heatwaves`). Raw user queries use natural language: "UAE's clean energy plans", "rising sea levels in Gulf". You cannot simply lowercase and split — you need alias resolution that maps "UAE" → `ARE`, "sea level rise" → `sea_level_rise`, "renewables" → `renewable_energy`. The aliases.yaml in the schema defines these. Missing this step means Cypher returns zero rows even when the evidence exists.
+
+**Design consequence:** Entity extraction must include an alias-lookup layer that normalises before Cypher parameter injection.
+
+---
+
+### Assumption 3 — "The four pipeline stages are sequential"
+**Challenge:** Treating Stage 1 → 2 → 3 → 4 as a strict waterfall means a Stage 1 failure (no Cypher hits) cascades and produces an empty answer, even when hybrid retrieval alone would have worked. Stages should be independent lanes that merge at Stage 3.
+
+**Design consequence:** Graph path (Stages 1–2) and hybrid path (BM25 + dense) run in parallel. Stage 3 blends whatever was returned. If Stage 1 returns nothing, Stage 3 receives only hybrid evidence.
+
+---
+
+### Assumption 4 — "Citations come from chunk metadata"
+**Challenge:** The Finding node stores `doc_id` + `page` + `qdrant_chunk_id`. However, the chunk metadata in `sample_chunks.json` stores `doc_id` and `chunk_id` but page is derived from the chunk's position in the PDF. If `qdrant_chunk_id` is empty on a Finding node (the schema shows it is optional), you cannot directly link a graph hit to a specific page.
+
+**Design consequence:** Citation builder must cascade: first look for `qdrant_chunk_id` on the Finding, then fall back to `doc_id + page` lookup in chunk metadata, then fall back to doc-level citation only.
+
+---
+
+### Assumption 5 — "Cypher generated once is correct"
+**Challenge:** The 5 pre-built GRAPHRAG_REASONING queries in `cypher_queries.py` cover: country-policy-target, policy-risk-sector, technology-mitigates-risk, finding-document-grounding, and region-climate-risk. But they all require pre-known parameter IDs (`country_id`, `policy_id`, `tech_id`, `risk_id`, `region_id`). A user query may span multiple entity types (e.g., "what technologies does the UAE use to reduce coastal flooding risk?") — none of the five queries covers this 3-entity intersection.
+
+**Design consequence:** Query understanding must classify the query into one of the 5 known templates, or compose a custom multi-hop Cypher. Template selection is safer and more testable than open-ended Cypher generation.
+
+---
+
+## PART 1 — PIPELINE ARCHITECTURE
+
+```
+User Query
+    │
+    ├──[A] SUBGRAPH SELECTION──────────────────────────────────────────┐
+    │    1. Intent classification (which GRAPHRAG_REASONING template?)  │
+    │    2. Entity extraction + alias normalisation                     │
+    │    3. Cypher generation (parameterised, not string-interpolated)  │
+    │    4. Node ranking (by confidence_rank, year DESC)                │
+    │                                                                   │
+    ├──[B] GRAPH EXPANSION────────────────────────────────────────────┤
+    │    1. Expand Finding nodes (doc_id + page → chunks)              │
+    │    2. Expand Document nodes (doc_id → most-relevant chunks)      │
+    │    3. Expansion depth limit = 1 hop max                          │
+    │    4. Score chunk relevance vs. query                            │
+    │                                                                   │
+    ├──[Parallel] HYBRID RETRIEVAL (existing D2 stack)                 │
+    │    BM25 + dense TF-IDF/LSA → RRF fusion                         │
+    │                                                                   │
+    ├──[C] HYBRID BLEND──────────────────────────────────────────────┤
+    │    1. Graph chunks: source_type = "graph"                        │
+    │    2. Hybrid chunks: source_type = "hybrid"                      │
+    │    3. Re-rank merged pool by combined score                      │
+    │    4. Dedup by chunk_id                                          │
+    │                                                                   │
+    └──[D] ANSWER GENERATION─────────────────────────────────────────┘
+         1. Build prompt context from top-K blended chunks
+         2. Inject graph path as structured evidence header
+         3. Generate answer (Gemini 2.5 Flash)
+         4. Attach page citations from citation_builder
+```
+
+---
+
+## PART A — SUBGRAPH SELECTION: Design Decisions
+
+### A1 — Query Intent Classification
+
+**Why needed?** The 5 GRAPHRAG_REASONING templates each require different Cypher parameters. Without knowing which template to use, you either try all 5 (slow, noisy) or fail silently (no results).
+
+**Failure mode prevented:** Zero graph hits because the wrong template was called with irrelevant parameters.
+
+**Without it:** Vector search alone returns semantically related chunks, but misses multi-hop evidence chains (e.g., UAE → Net Zero Policy → Triple Renewables Target).
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Keyword rule classifier** | Map query tokens to templates using keyword lists (country names → `graphrag_country_policy_target`) | Fast, deterministic, no API call | Fails on paraphrased queries; brittle |
+| **B: LLM classifier (recommended)** | Send query to Gemini with a classification prompt; return JSON `{template: str, entities: dict}` | Handles paraphrase; returns structured entities in one call | Adds 1 API call; small latency cost |
+| **C: Embedding similarity to template descriptions** | Embed query, compare to template description embeddings | No API call | Needs pre-computed template embeddings; accuracy mediocre |
+
+**Winner: Option B (LLM classifier)**
+Evidence: Microsoft's GraphRAG paper (Edge et al., 2024) shows LLM-based query decomposition outperforms keyword routing by 23% on multi-hop queries. One classification call costs ~200 tokens — cheaper than retrying 5 failed Cypher queries.
+
+---
+
+### A2 — Entity Extraction + Alias Normalisation
+
+**Why needed?** All Cypher queries use `{country_id: $country_id}` — a slug like `ARE`, not the string "UAE". Raw LLM output returns "United Arab Emirates". Without normalisation, the Cypher WHERE clause matches nothing.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Dictionary lookup only** | `COUNTRY_IDS` dict already in `neo4j_builder.py` | Already coded | Only covers 7 countries; misses all others |
+| **B: LLM + alias YAML (recommended)** | LLM extracts entity names; alias YAML normalises; `slugify()` produces ID | Covers full alias table; extensible | Needs alias YAML kept in sync with graph |
+| **C: Neo4j CONTAINS or FULLTEXT search** | Query `WHERE toLower(n.name) CONTAINS $term` | No pre-processing needed | Much slower; returns too many nodes; no type filtering |
+
+**Winner: Option B**
+The schema's `aliases.yaml` design intention is exactly this. The `slugify()` function in `neo4j_builder.py` is already the canonical normaliser — we use it.
+
+---
+
+### A3 — Cypher Query Generation
+
+**Why needed?** Wrong Cypher = no results. String interpolation = injection risk. Parameterised queries = safe and testable.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Pre-built parameterised templates (recommended)** | Use `GRAPHRAG_REASONING` dict in `cypher_queries.py`; fill params | Safe, testable, already built | Limited to 5 patterns |
+| **B: LLM-generated Cypher** | Ask Gemini to write Cypher from scratch | Flexible | Hallucinates node labels; uses wrong rel types; injection risk |
+| **C: Programmatic Cypher builder** | Python class that builds Cypher string from entity dict | Fully flexible; testable | Complex to implement correctly |
+
+**Winner: Option A** for the 5 known patterns, with Option C fallback for multi-entity queries not covered by existing templates.
+Evidence: Neo4j's own GraphRAG best practices (2024) explicitly recommend template-based Cypher over open-ended LLM generation for production systems.
+
+---
+
+### A4 — Node Ranking
+
+**Why needed?** A Cypher query for `graphrag_finding_document_grounding` may return 50+ Finding nodes. We need the top-K most relevant before expansion — otherwise Stage B fetches hundreds of chunks.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Graph properties only** | Sort by `confidence_rank DESC`, `year DESC` | Fast, uses existing properties | Ignores query relevance |
+| **B: Graph score + semantic similarity (recommended)** | Score each Finding by BM25 match to query text + confidence_rank | Balances evidence quality and relevance | Adds BM25 computation per Finding |
+| **C: LLM re-ranking** | Ask LLM to rank Finding texts | Most accurate | Expensive; latency |
+
+**Winner: Option B**
+BM25 on Finding text is cheap (already have BM25Okapi) and prevents high-confidence but off-topic findings from entering the context window. Limit to top-5 findings before expansion.
+
+---
+
+## PART B — GRAPH EXPANSION: Design Decisions
+
+### B1 — Expand to Chunk Level
+
+**Why needed?** Finding nodes contain short claim texts (1–3 sentences). The LLM needs full chunk context to generate a grounded answer. Expansion maps `Finding.qdrant_chunk_id → chunk metadata → full chunk text`.
+
+**Failure mode prevented:** Answer generation using only claim snippets — hallucination of surrounding context.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Finding text only** | Use `f.text` directly from graph | No expansion cost | Short snippets; poor context for generation |
+| **B: Finding → chunk lookup (recommended)** | `f.qdrant_chunk_id` → chunk text from sample_chunks.json | Full context; page-anchored | Requires chunk store lookup |
+| **C: Finding → full PDF page** | Retrieve entire PDF page via pdfplumber | Most complete | Heavy; slow; noisy |
+
+**Winner: Option B**
+
+---
+
+### B2 — Limit Noisy Expansion
+
+**Why needed?** Multi-hop expansion (Finding → Document → all Findings of that Document) can return hundreds of irrelevant chunks. Each additional hop multiplies noise geometrically.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Hard hop limit = 1 (recommended)** | Only expand direct Finding → chunk; never expand Document → all Findings | Simple; deterministic | May miss related evidence |
+| **B: Beam search with relevance gate** | Expand only if semantic similarity > threshold | Quality-controlled | Complex; threshold tuning required |
+| **C: No limit** | Full 2-hop expansion | Maximum recall | Catastrophic context pollution |
+
+**Winner: Option A** — expand at most 1 hop, maximum 8 graph chunks. Quality gate via semantic scoring applied after expansion.
+
+---
+
+### B3 — Score Chunk Relevance
+
+**Why needed?** After expansion we may have 20 chunks. Not all are relevant to the query. We must score and filter before blending.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: BM25 score vs. query** | Tokenise chunk text, score vs. query | Fast; consistent with existing BM25 | BM25 misses paraphrase |
+| **B: Cosine similarity vs. query embedding (recommended)** | Use existing TF-IDF/LSA embeddings | Semantic; consistent with dense_retriever | Requires embedding computation |
+| **C: Keep all graph chunks** | No scoring | Simple | Context pollution |
+
+**Winner: Option B** — use `DenseRetriever.embed([chunk_text])` and cosine similarity vs. query embedding. Keep chunks with similarity > 0.25.
+
+---
+
+## PART C — HYBRID BLEND: Design Decisions
+
+### C1 — Merging Graph and Hybrid Evidence
+
+**Why needed?** Graph chunks and hybrid chunks are ranked by different scores (graph: confidence_rank + cosine; hybrid: RRF score). They cannot be sorted together without a normalised combined score.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Interleaved round-robin** | Alternate graph / hybrid chunks | Simple; ensures both sources represented | Ignores quality differences |
+| **B: Score normalisation + weighted sum (recommended)** | Normalise both to [0,1]; apply `graph_weight=0.4, hybrid_weight=0.6` | Principled; tunable | Weight choice is empirical |
+| **C: RRF on merged pool** | Treat graph and hybrid as two ranked lists; apply RRF | Score-agnostic; consistent with D2 RRF fusion | Loses graph quality signal |
+
+**Winner: Option B**
+Default: `graph_weight=0.4, hybrid_weight=0.6`. Rationale: graph evidence is sparser (fewer chunks) but higher precision; hybrid evidence is broader. Weight reflects recall vs. precision trade-off. This can be tuned in `d3_run_card.yaml`.
+
+---
+
+### C2 — Re-ranking
+
+**Why needed?** After blending, the top-K chunks must be the most relevant and non-redundant.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Score sort only** | Sort by combined score | Simple | Allows near-duplicates |
+| **B: MMR (Maximal Marginal Relevance, recommended)** | Penalise chunks too similar to already-selected chunks | Reduces redundancy; ensures diverse evidence | Slightly complex |
+| **C: LLM re-ranker** | Cross-encoder re-ranking | Highest quality | 2–3 extra API calls |
+
+**Winner: Option B** — MMR with `lambda_param=0.7` (balance relevance vs. diversity).
+
+---
+
+## PART D — ANSWER GENERATION: Design Decisions
+
+### D1 — Prompt Context Structure
+
+**Why needed?** The LLM must know which evidence came from the graph (structured, high-confidence) vs. hybrid retrieval (broad, probabilistic). Mixing them without labelling causes the LLM to treat all evidence equally.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: Flat context dump** | Concatenate all chunks | Simple | No source differentiation |
+| **B: Structured two-section prompt (recommended)** | Section 1: Graph path summary + graph chunks. Section 2: Additional hybrid evidence | LLM uses graph as primary; hybrid as supplementary | Longer prompt |
+| **C: System-prompt injection of graph metadata** | Graph path as system message, chunks in user message | Role separation | Less visible to LLM during generation |
+
+**Winner: Option B**
+
+---
+
+### D2 — Citation Format
+
+**Why needed?** D3 requires page-level citations. The schema anchors Finding nodes to `page` integers. Chunk metadata stores `doc_id`. The final answer must reference `[Author, Year, p. N]`.
+
+**Alternatives:**
+
+| Option | Description | Pros | Cons |
+|---|---|---|---|
+| **A: In-text numeric tags** | Answer text uses `[1]`, `[2]`; reference list at end | Standard academic | LLM may not reliably place tags |
+| **B: Parenthetical APA style (recommended)** | `(Calvin et al., 2023, p. 14)` inline | Self-contained; no post-processing needed | Longer answer text |
+| **C: Footnote markers** | Superscript numbers; footnote block | Clean reading | Complex rendering |
+
+**Winner: Option B** — citation_builder produces `(Author, Year, p. N)` strings that are injected into the prompt instruction: "cite evidence using the provided references."
+
+---
+
+## PART 2 — IMPLEMENTATION PLAN
+
+### File responsibilities
+- `graphrag_executor.py` — orchestrates all 4 stages; the main class `GraphRAGExecutor`
+- `prompt_builder.py` — builds the structured two-section prompt; `PromptBuilder`
+- `citation_builder.py` — resolves chunks + graph findings to page citations; `CitationBuilder`
+
+### Dependencies on existing D2 code
+- `src/graph/cypher_queries.py` → GRAPHRAG_REASONING templates
+- `src/graph/neo4j_builder.py` → Neo4j driver, slugify(), confidence_rank()
+- `src/retrieval/hybrid_retriever.py` → HybridRetriever.search()
+- `src/retrieval/dense_retriever.py` → DenseRetriever (for expansion scoring)
+- `data/sample/sample_chunks.json` → chunk store for text lookup
+
+### Run card additions for D3 (append to configs/)
+```yaml
+graphrag:
+  graph_weight: 0.4
+  hybrid_weight: 0.6
+  max_graph_chunks: 8
+  max_hybrid_chunks: 8
+  expansion_hops: 1
+  cosine_threshold: 0.25
+  mmr_lambda: 0.7
+  top_k_findings: 5
+  cypher_timeout_sec: 10
+  fallback_to_hybrid: true
+```
