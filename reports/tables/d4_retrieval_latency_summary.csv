@@ -1,0 +1,9 @@
+metric,value
+Hit@5,0.9
+NDCG@5,0.8032
+Recall@5,0.1372
+p95_no_cache_ms,139.39
+mean_no_cache_ms,99.1
+p95_cached_ms,8.67
+mean_cached_ms,5.09
+cache_speedup_median_x,22.2
