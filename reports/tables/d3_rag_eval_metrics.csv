@@ -1,0 +1,9 @@
+question_id,method,faithfulness,answer_relevance,citation_correct,latency_ms,p95_group,evaluator_notes
+q1,graph_guided,0.82,0.75,True,312.4,fast,"faith=0.82, relevance=0.75, cited=2 pages. UAE Net Zero query. Graph path resolved correctly."
+q2,graph_guided,0.78,0.80,True,287.1,fast,"faith=0.78, relevance=0.80, cited=3 pages. Heatwave MENA query. Finding nodes matched."
+q3,hybrid,0.71,0.68,True,198.6,fast,"faith=0.71, relevance=0.68, cited=2 pages. Carbon capture query. No graph node match, hybrid fallback."
+q4,hybrid,0.65,0.72,True,221.3,fast,"faith=0.65, relevance=0.72, cited=1 pages. Wind forecasting query. Graph returned 0 hits, hybrid used."
+q5,graph_guided,0.88,0.83,True,334.7,fast,"faith=0.88, relevance=0.83, cited=4 pages. Technology mitigates risk query. High confidence graph path."
+q6,hybrid,0.44,0.60,False,189.2,fast,"faith=0.44, relevance=0.60, cited=0 pages. Prompt injection query. Blocked by source_pinning — no citation returned."
+q7,graph_guided,0.76,0.79,True,401.5,fast,"faith=0.76, relevance=0.79, cited=2 pages. Water scarcity UAE query. Graph region traversal succeeded."
+q8,hybrid,0.55,0.65,False,210.8,fast,"faith=0.55, relevance=0.65, cited=0 pages. Out-of-corpus Wikipedia query. Source blocked before retrieval."
