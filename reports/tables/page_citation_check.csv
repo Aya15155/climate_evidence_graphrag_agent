@@ -1,0 +1,188 @@
+answer_id,query,chunk_id,document_id,page_cited,page_start,page_end,total_pages,doc_exists,page_in_range,text_length,evidence_overlap_score,status,failure_reason
+Q01,What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?,uae_netzero_chunk_003,,12,,,,False,False,0,0.0,missing_document,chunk_id 'uae_netzero_chunk_003' not found in sample_chunks and document_id could not be resolved to known metadata
+Q01,What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?,uae_netzero_chunk_007,,3,,,,False,False,0,0.0,missing_document,chunk_id 'uae_netzero_chunk_007' not found in sample_chunks and document_id could not be resolved to known metadata
+Q01,What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?,calvin_2023_chunk_012,calvin_2023_ipcc_2023_climate_change_2023_synthesis_report_summary_w4385123314,14,,,42,True,True,0,0.0,text_not_found,chunk text missing or too short (0 chars); likely PDF extraction failure or graph-only node with no real chunk
+Q01,What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?,alam_2020_chunk_005,alam_2020_high_level_penetration_renewable_energy_sources_into_grid_w3033581805,7,,,23,True,True,0,0.0,text_not_found,chunk text missing or too short (0 chars); likely PDF extraction failure or graph-only node with no real chunk
+Q01,What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?,balcombe_2019_chunk_002,balcombe_2019_how_decarbonise_international_shipping_options_fuels_technologies_policies_w2906683991,12,,,46,True,True,0,0.0,text_not_found,chunk text missing or too short (0 chars); likely PDF extraction failure or graph-only node with no real chunk
+Q01,What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?,hybrid_bm25_chunk_041,,12,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_bm25_chunk_041' not found in sample_chunks and document_id could not be resolved to known metadata
+Q01,What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?,hybrid_dense_chunk_018,,12,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_dense_chunk_018' not found in sample_chunks and document_id could not be resolved to known metadata
+Q01,What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?,hybrid_rrf_chunk_009,,12,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_009' not found in sample_chunks and document_id could not be resolved to known metadata
+Q02,Which technologies mitigate heatwave risk in the energy sector according to climate literature?,solar_pv_chunk_001,,4,,,,False,False,0,0.0,missing_document,chunk_id 'solar_pv_chunk_001' not found in sample_chunks and document_id could not be resolved to known metadata
+Q02,Which technologies mitigate heatwave risk in the energy sector according to climate literature?,green_h2_chunk_004,,9,,,,False,False,0,0.0,missing_document,chunk_id 'green_h2_chunk_004' not found in sample_chunks and document_id could not be resolved to known metadata
+Q02,Which technologies mitigate heatwave risk in the energy sector according to climate literature?,wind_chunk_002,,1,,,,False,False,0,0.0,missing_document,chunk_id 'wind_chunk_002' not found in sample_chunks and document_id could not be resolved to known metadata
+Q02,Which technologies mitigate heatwave risk in the energy sector according to climate literature?,alam_2020_chunk_011,alam_2020_high_level_penetration_renewable_energy_sources_into_grid_w3033581805,22,,,23,True,True,0,0.0,text_not_found,chunk text missing or too short (0 chars); likely PDF extraction failure or graph-only node with no real chunk
+Q02,Which technologies mitigate heatwave risk in the energy sector according to climate literature?,chu_2016_chunk_003,chu_2016_path_sustainable_energy_w2564178799,4,,,16,True,True,0,0.0,text_not_found,chunk text missing or too short (0 chars); likely PDF extraction failure or graph-only node with no real chunk
+Q02,Which technologies mitigate heatwave risk in the energy sector according to climate literature?,hybrid_rrf_chunk_007,,4,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_007' not found in sample_chunks and document_id could not be resolved to known metadata
+Q02,Which technologies mitigate heatwave risk in the energy sector according to climate literature?,hybrid_rrf_chunk_019,,4,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_019' not found in sample_chunks and document_id could not be resolved to known metadata
+Q03,What climate risks in the MENA region are documented in high-confidence findings?,finding_chunk_heatwave_p5,,5,,,,False,False,0,0.0,missing_document,chunk_id 'finding_chunk_heatwave_p5' not found in sample_chunks and document_id could not be resolved to known metadata
+Q03,What climate risks in the MENA region are documented in high-confidence findings?,finding_chunk_seaLevel_p8,,8,,,,False,False,0,0.0,missing_document,chunk_id 'finding_chunk_seaLevel_p8' not found in sample_chunks and document_id could not be resolved to known metadata
+Q03,What climate risks in the MENA region are documented in high-confidence findings?,finding_chunk_drought_p3,,3,,,,False,False,0,0.0,missing_document,chunk_id 'finding_chunk_drought_p3' not found in sample_chunks and document_id could not be resolved to known metadata
+Q03,What climate risks in the MENA region are documented in high-confidence findings?,calvin_2023_chunk_002,calvin_2023_ipcc_2023_climate_change_2023_synthesis_report_summary_w4385123314,2,,,42,True,True,0,0.0,text_not_found,chunk text missing or too short (0 chars); likely PDF extraction failure or graph-only node with no real chunk
+Q03,What climate risks in the MENA region are documented in high-confidence findings?,altieri_2015_chunk_007,altieri_2015_agroecology_design_climate_change_resilient_farming_systems_w2077880182,5,,,22,True,True,0,0.0,text_not_found,chunk text missing or too short (0 chars); likely PDF extraction failure or graph-only node with no real chunk
+Q03,What climate risks in the MENA region are documented in high-confidence findings?,hybrid_rrf_chunk_011,,5,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_011' not found in sample_chunks and document_id could not be resolved to known metadata
+Q03,What climate risks in the MENA region are documented in high-confidence findings?,hybrid_rrf_chunk_024,,5,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_024' not found in sample_chunks and document_id could not be resolved to known metadata
+Q04,What does the literature say about gradient boosting for wind power forecasting?,hybrid_rrf_chunk_001,,3,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_001' not found in sample_chunks and document_id could not be resolved to known metadata
+Q04,What does the literature say about gradient boosting for wind power forecasting?,hybrid_rrf_chunk_003,,7,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_003' not found in sample_chunks and document_id could not be resolved to known metadata
+Q04,What does the literature say about gradient boosting for wind power forecasting?,hybrid_rrf_chunk_008,,1,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_008' not found in sample_chunks and document_id could not be resolved to known metadata
+Q04,What does the literature say about gradient boosting for wind power forecasting?,hybrid_rrf_chunk_015,,3,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_015' not found in sample_chunks and document_id could not be resolved to known metadata
+Q04,What does the literature say about gradient boosting for wind power forecasting?,hybrid_dense_chunk_009,,3,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_dense_chunk_009' not found in sample_chunks and document_id could not be resolved to known metadata
+Q05,List all policies adopted by countries in the Pacific Islands for coastal flooding.,hybrid_rrf_chunk_004,,11,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_004' not found in sample_chunks and document_id could not be resolved to known metadata
+Q05,List all policies adopted by countries in the Pacific Islands for coastal flooding.,hybrid_rrf_chunk_009,,11,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_009' not found in sample_chunks and document_id could not be resolved to known metadata
+Q05,List all policies adopted by countries in the Pacific Islands for coastal flooding.,hybrid_bm25_chunk_012,,11,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_bm25_chunk_012' not found in sample_chunks and document_id could not be resolved to known metadata
+Q05,List all policies adopted by countries in the Pacific Islands for coastal flooding.,hybrid_dense_chunk_006,,11,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_dense_chunk_006' not found in sample_chunks and document_id could not be resolved to known metadata
+Q06,How much has global mean temperature risen since pre-industrial times?,ipcc_chunk_004,,4,,,,False,False,0,0.0,missing_document,chunk_id 'ipcc_chunk_004' not found in sample_chunks and document_id could not be resolved to known metadata
+Q06,How much has global mean temperature risen since pre-industrial times?,ipcc_chunk_006,,6,,,,False,False,0,0.0,missing_document,chunk_id 'ipcc_chunk_006' not found in sample_chunks and document_id could not be resolved to known metadata
+Q06,How much has global mean temperature risen since pre-industrial times?,calvin_2023_chunk_001,calvin_2023_ipcc_2023_climate_change_2023_synthesis_report_summary_w4385123314,1,,,42,True,True,0,0.0,text_not_found,chunk text missing or too short (0 chars); likely PDF extraction failure or graph-only node with no real chunk
+Q06,How much has global mean temperature risen since pre-industrial times?,hybrid_rrf_chunk_002,,4,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_002' not found in sample_chunks and document_id could not be resolved to known metadata
+Q06,How much has global mean temperature risen since pre-industrial times?,hybrid_rrf_chunk_007,,4,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_rrf_chunk_007' not found in sample_chunks and document_id could not be resolved to known metadata
+Q06,How much has global mean temperature risen since pre-industrial times?,hybrid_dense_chunk_003,,4,,,,False,False,0,0.0,missing_document,chunk_id 'hybrid_dense_chunk_003' not found in sample_chunks and document_id could not be resolved to known metadata
+SAMPLE,(chunk sample),chunk_041906,mercure_2013_complexity_economic_science_possible_economic_benefits_climate_change_1310_4403v2,2,2,2,15,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_007297,friedlingstein_2019_global_carbon_budget_2019_w2979653715,46,46,46,56,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_001640,friedlingstein_2022_global_carbon_budget_2022_w4308697725,69,69,69,90,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_048599,elavarasan_2020_crop_yield_prediction_deep_reinforcement_learning_sustainable_agrarian_w3020885311,10,10,10,16,True,True,605,0.302,valid,
+SAMPLE,(chunk sample),chunk_018025,watanabe_2010_improved_climate_simulation_miroc5_mean_states_variability_climate_w2006750690,15,15,15,24,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_016050,delworth_2006_gfdl_s_cm2_global_coupled_climate_part_i_w2003164867,3,3,3,32,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_014629,sangrody_2017_weather_forecasting_error_solar_energy_forecasting_1709_08135v1,1,1,1,15,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_009145,guenther_2012_emissions_gases_aerosols_nature_version_2_1_megan2_w2955601895,17,17,17,22,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_048266,sovacool_2021_climate_change_industrial_f_gases_critical_systematic_review_w3132315939,92,92,92,125,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_006718,fatima_2020_fingerprints_climate_warming_cereal_crops_phenology_adaptation_options_w3094545424,12,12,12,21,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_044349,hahn_2014_tensions_corporate_sustainability_integrative_framework_w1988805390,22,22,22,51,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_048541,elavarasan_2020_crop_yield_prediction_deep_reinforcement_learning_sustainable_agrarian_w3020885311,2,2,2,16,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_035742,smith_2019_current_future_role_haber_bosch_ammonia_carbon_free_w2998496658,2,2,2,14,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_005698,kanter_2016_evaluating_agricultural_trade_offs_age_sustainable_development_w2536993208,31,31,31,56,True,True,381,0.191,valid,
+SAMPLE,(chunk sample),chunk_038699,dumas_2022_energy_return_investment_whole_energy_systems_application_belgium_2205_06727v4,18,18,18,60,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_027652,abdin_2019_hydrogen_as_energy_vector_w2998704111,10,10,10,32,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_002083,ross_2019_designing_materials_electrochemical_carbon_dioxide_recycling_w2954959763,36,36,36,47,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_001953,bl_schl_2019_changing_climate_both_increases_decreases_european_river_floods_w2970830005,14,14,14,24,True,True,559,0.28,valid,
+SAMPLE,(chunk sample),chunk_006141,kuik_2016_long_term_research_challenges_wind_energy_research_agenda_w2272499513,1,1,1,39,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_014329,paletta_2020_temporally_consistent_image_sun_tracking_algorithm_solar_energy_2012_01059v3,6,6,6,10,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_015248,wang_2000_pacific_east_asian_teleconnection_how_does_enso_affect_w2150897391,8,8,8,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_033119,balcombe_2019_how_decarbonise_international_shipping_options_fuels_technologies_policies_w2906683991,4,4,4,46,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_039454,scheller_2021_stakeholder_dynamics_residential_solar_energy_adoption_findings_focus_2104_14240v1,19,19,19,32,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_001740,friedlingstein_2022_global_carbon_budget_2022_w4308697725,78,78,78,90,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_036782,treutlein_2026_real_world_energy_data_200_feeders_low_voltage_2602_03521v1,1,1,1,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_013032,mol_2023_observed_patterns_surface_solar_irradiance_under_cloudy_clear_2307_06980v2,1,1,1,29,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_046926,eekhout_2018_why_increased_extreme_precipitation_under_climate_change_negatively_w2795623706,7,7,7,12,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_042591,reimer_2009_intcal09_marine09_radiocarbon_age_calibration_curves_0_50_w4211135859,7,7,7,40,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_045963,thiery_2015_impact_african_great_lakes_regional_climate_w2009081140,2,2,2,25,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_035714,howarth_2011_methane_greenhouse_gas_footprint_natural_gas_shale_formations_w2139010298,9,9,9,12,True,True,136,0.68,weak_overlap,text present but short (136 chars); page exists but evidence confidence is low
+SAMPLE,(chunk sample),chunk_027494,konapala_2020_climate_change_will_affect_global_water_availability_through_w3036708439,4,4,4,10,True,True,261,0.131,valid,
+SAMPLE,(chunk sample),chunk_014447,dlamini_2019_adaptive_resource_management_virtualized_computing_platform_within_edge_1906_05008v1,4,4,4,9,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_029440,qu_r_2018_global_carbon_budget_2017_w2915841000,26,26,26,44,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_038619,dumas_2022_energy_return_investment_whole_energy_systems_application_belgium_2205_06727v4,1,1,1,60,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_018232,voldoire_2012_cnrm_cm5_1_global_climate_description_basic_evaluation_w2075112338,23,23,23,31,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_000426,staffell_2018_role_hydrogen_fuel_cells_global_energy_system_w2905218447,10,10,10,29,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_010464,andreae_2006_black_carbon_brown_carbon_nature_light_absorbing_carbonaceous_w2132436820,3,3,3,18,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_045754,tong_2020_dynamic_projection_anthropogenic_emissions_china_methodology_2015_2050_w2997128519,20,20,20,29,True,True,324,0.162,valid,
+SAMPLE,(chunk sample),chunk_027697,abdin_2019_hydrogen_as_energy_vector_w2998704111,14,14,14,32,True,True,244,0.122,valid,
+SAMPLE,(chunk sample),chunk_022299,meinshausen_2020_shared_socio_economic_pathway_ssp_greenhouse_gas_concentrations_w3048501727,33,33,33,35,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_018211,voldoire_2012_cnrm_cm5_1_global_climate_description_basic_evaluation_w2075112338,18,18,18,31,True,True,414,0.207,valid,
+SAMPLE,(chunk sample),chunk_010190,akagi_2011_emission_factors_open_domestic_biomass_burning_use_atmospheric_w2144304061,8,8,8,34,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_014111,orang_2022_introducing_randomized_high_order_fuzzy_cognitive_maps_as_2201_02158v2,16,16,16,26,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_022060,deser_2010_uncertainty_climate_change_projections_role_internal_variability_w1974470230,20,20,20,20,True,True,458,0.229,valid,
+SAMPLE,(chunk sample),chunk_006699,fatima_2020_fingerprints_climate_warming_cereal_crops_phenology_adaptation_options_w3094545424,11,11,11,21,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_006079,steenwerth_2014_climate_smart_agriculture_global_research_agenda_scientific_basis_w2113355006,34,34,34,39,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_024899,smith_2023_climate_uncertainty_impacts_optimal_mitigation_pathways_social_cost_2304_08957v3,33,33,33,34,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_006339,kuik_2016_long_term_research_challenges_wind_energy_research_agenda_w2272499513,24,24,24,39,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_023527,ho_2026_balancing_sustainability_performance_role_small_scale_llms_agentic_2601_19311v2,13,13,13,16,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_022542,heimann_2008_terrestrial_ecosystem_carbon_dynamics_climate_feedbacks_w1965122835,3,3,3,4,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_039566,bhusal_2021_deep_ensemble_learning_real_time_power_system_state_2101_03457v1,3,3,3,15,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_017336,randall_2007_climate_their_evaluation_w1705762375,18,18,18,74,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_002848,gr_bler_2018_low_energy_demand_scenario_meeting_1_5_c_w2800190939,34,34,34,121,True,True,534,0.267,valid,
+SAMPLE,(chunk sample),chunk_047824,yu_2020_economic_policy_uncertainty_epu_firm_carbon_emissions_evidence_w3112557550,39,39,39,42,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_030109,baumann_2019_metal_organic_framework_functionalization_design_strategies_advanced_electrochemical_w2963819993,12,12,12,14,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_035143,bui_2018_carbon_capture_storage_ccs_way_forward_w2784350055,84,84,84,115,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_008181,fuzzi_2015_particulate_matter_air_quality_climate_lessons_learned_future_w2100256027,35,35,35,83,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_024808,smith_2023_climate_uncertainty_impacts_optimal_mitigation_pathways_social_cost_2304_08957v3,16,16,16,34,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_005165,sch_r_2019_kilometer_scale_climate_prospects_challenges_w2981627152,13,13,13,21,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_036179,ravi_2025_citizen_centered_climate_intelligence_operationalizing_open_tree_data_2508_17648v1,7,7,7,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_019214,pinson_2013_wind_energy_forecasting_challenges_its_operational_management_1312_6471v1,6,6,6,23,True,True,231,0.116,valid,
+SAMPLE,(chunk sample),chunk_041199,giasemidis_2019_modelling_demand_uncertainty_low_voltage_networks_effect_non_1901_08497v1,10,10,10,32,True,True,134,0.67,weak_overlap,text present but short (134 chars); page exists but evidence confidence is low
+SAMPLE,(chunk sample),chunk_040536,bokde_2020_graphical_carbon_efficient_spot_market_scheduling_power_x_2009_03160v1,26,26,26,44,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_023701,makin_2025_sustainable_ai_training_hardware_software_co_design_nvidia_2508_13163v1,11,11,11,12,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_037838,xia_2024_efficient_explainable_transformer_few_shot_learning_modeling_electricity_2408_08399v2,4,4,4,9,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_012602,foden_2018_climate_change_vulnerability_assessment_species_w2894287306,68,68,68,81,True,True,147,0.735,weak_overlap,text present but short (147 chars); page exists but evidence confidence is low
+SAMPLE,(chunk sample),chunk_046175,w_nsch_2022_deep_learning_shows_declining_groundwater_levels_germany_until_w4220732246,8,8,8,13,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_004559,morelli_2016_managing_climate_change_refugia_climate_adaptation_w2499516979,13,13,13,17,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_003004,gr_bler_2018_low_energy_demand_scenario_meeting_1_5_c_w2800190939,79,79,79,121,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_043337,qu_r_2016_global_carbon_budget_2016_w2916961622,22,22,22,45,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_014936,meinshausen_2011_rcp_greenhouse_gas_concentrations_their_extensions_1765_2300_w2171984413,27,27,27,29,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_018966,wen_2022_wind_energy_forecasting_missing_values_within_fully_conditional_2203_08252v2,21,21,21,31,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_005230,sch_r_2019_kilometer_scale_climate_prospects_challenges_w2981627152,21,21,21,21,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_015257,wang_2000_pacific_east_asian_teleconnection_how_does_enso_affect_w2150897391,9,9,9,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_006620,rosenzweig_2014_hurricane_sandy_adaptation_pathways_new_york_lessons_first_w1977182481,14,14,14,14,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_024912,riahi_2011_rcp_8_5_scenario_comparatively_high_greenhouse_gas_w1997065014,1,1,1,25,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_018218,voldoire_2012_cnrm_cm5_1_global_climate_description_basic_evaluation_w2075112338,20,20,20,31,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_029715,chu_2016_path_sustainable_energy_w2564178799,6,6,6,16,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_041661,knobloch_2017_simulating_deep_decarbonisation_residential_heating_limiting_global_warming_1710_11019v3,34,34,34,35,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_023910,oliveira_filho_2025_phoeni6_systematic_evaluating_energy_consumption_neural_networks_2502_17734v1,5,5,5,24,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_010660,trenberth_2008_earth_s_global_energy_budget_w2141748334,7,7,7,14,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_024261,andersen_2022_cairl_high_performance_reinforcement_learning_environment_toolkit_2210_01235v1,3,3,3,8,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_023284,shah_2025_assessing_climate_vulnerability_risk_substations_massachusetts_sensitivity_2511_03748v1,3,3,3,6,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_013731,guen_2022_deep_learning_spatio_temporal_forecasting_application_solar_energy_2205_03571v1,130,130,130,216,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_043921,fritz_2019_citizen_science_united_nations_sustainable_development_goals_w2979527643,5,5,5,5,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_017497,randall_2007_climate_their_evaluation_w1705762375,35,35,35,74,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_045995,thiery_2015_impact_african_great_lakes_regional_climate_w2009081140,7,7,7,25,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_044797,barreto_2002_hydrogen_economy_21st_century_sustainable_development_scenario_w2093779538,16,16,16,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_042470,peel_2007_updated_world_map_k_ppen_geiger_climate_classification_w2101108516,2,2,2,12,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_004680,dolan_2021_evaluating_economic_impact_water_scarcity_changing_world_w3138842059,9,9,9,10,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_039921,bokde_2020_graphical_carbon_efficient_spot_market_scheduling_power_x_2009_03160v1,26,26,26,44,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_041614,knobloch_2017_simulating_deep_decarbonisation_residential_heating_limiting_global_warming_1710_11019v3,24,24,24,35,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_011216,gent_2011_community_climate_system_version_4_w1985217958,7,7,7,19,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_035006,bui_2018_carbon_capture_storage_ccs_way_forward_w2784350055,70,70,70,115,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_047785,yu_2020_economic_policy_uncertainty_epu_firm_carbon_emissions_evidence_w3112557550,25,25,25,42,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_016044,delworth_2006_gfdl_s_cm2_global_coupled_climate_part_i_w2003164867,2,2,2,32,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_010709,trenberth_2008_earth_s_global_energy_budget_w2141748334,14,14,14,14,True,True,372,0.186,valid,
+SAMPLE,(chunk sample),chunk_030295,hoegh_guldberg_2017_coral_reef_ecosystems_under_climate_change_ocean_acidification_w2613802059,5,5,5,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_024868,smith_2023_climate_uncertainty_impacts_optimal_mitigation_pathways_social_cost_2304_08957v3,28,28,28,34,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_017692,randall_2007_climate_their_evaluation_w1705762375,54,54,54,74,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_041944,mercure_2013_complexity_economic_science_possible_economic_benefits_climate_change_1310_4403v2,8,8,8,15,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_045100,forster_2020_current_future_global_climate_impacts_resulting_covid_19_w3048190739,6,6,6,15,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_036501,alkhayuon_2019_basin_bifurcations_oscillatory_instability_rate_induced_thresholds_amoc_1901_10111v2,17,17,17,31,True,True,473,0.236,valid,
+SAMPLE,(chunk sample),chunk_014393,shahid_2020_short_term_solar_energy_prediction_machine_learning_algorithms_2012_00688v1,12,12,12,17,True,True,179,0.895,weak_overlap,text present but short (179 chars); page exists but evidence confidence is low
+SAMPLE,(chunk sample),chunk_044867,malik_2018_land_use_driven_change_soil_ph_affects_microbial_w2889480988,5,5,5,10,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_021253,smith_2010_politics_social_ecological_resilience_sustainable_socio_technical_transitions_w1788156339,4,4,4,13,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_003666,huang_2023_evaluating_loss_functions_learning_data_pre_processing_climate_2306_11144v1,1,1,1,6,True,True,494,0.247,valid,
+SAMPLE,(chunk sample),chunk_015011,saha_2013_ncep_climate_forecast_system_version_2_w2060172488,9,9,9,24,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_002104,ross_2019_designing_materials_electrochemical_carbon_dioxide_recycling_w2954959763,43,43,43,47,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_020674,kabeyi_2022_sustainable_energy_transition_renewable_low_carbon_grid_electricity_w4220773259,41,41,41,45,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_026291,rockstr_m_2016_sustainable_intensification_agriculture_human_prosperity_global_sustainability_w2468709268,14,14,14,14,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_017547,randall_2007_climate_their_evaluation_w1705762375,40,40,40,74,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_004338,cannon_2017_multivariate_quantile_mapping_bias_correction_n_dimensional_probability_w2597689547,16,16,16,19,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_013827,guen_2022_deep_learning_spatio_temporal_forecasting_application_solar_energy_2205_03571v1,150,150,150,216,True,True,293,0.146,valid,
+SAMPLE,(chunk sample),chunk_037171,guti_rrez_finol_2025_scalable_kinetic_monte_carlo_platform_enabling_comprehensive_simulations_2511_09413v1,6,6,6,25,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_047050,guo_2024_monthly_climate_prediction_deep_convolutional_neural_network_long_w4401163187,12,12,12,17,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_020623,kabeyi_2022_sustainable_energy_transition_renewable_low_carbon_grid_electricity_w4220773259,37,37,37,45,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_013935,guen_2022_deep_learning_spatio_temporal_forecasting_application_solar_energy_2205_03571v1,174,174,174,216,True,True,407,0.203,valid,
+SAMPLE,(chunk sample),chunk_042955,sindelarova_2014_global_data_set_biogenic_voc_emissions_calculated_megan_w2130338957,16,16,16,25,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_032718,gr_bler_1999_dynamics_energy_technologies_global_change_w2096967727,24,24,24,40,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_025929,altieri_2015_agroecology_design_climate_change_resilient_farming_systems_w2077880182,22,22,22,22,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_042130,mercure_2013_dynamics_technology_diffusion_impacts_climate_policy_instruments_decarbonisation_1309_7626v4,17,17,17,18,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_030072,baumann_2019_metal_organic_framework_functionalization_design_strategies_advanced_electrochemical_w2963819993,8,8,8,14,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_009364,werf_2010_global_fire_emissions_contribution_deforestation_savanna_forest_agricultural_w2134927874,2,2,2,29,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_017360,randall_2007_climate_their_evaluation_w1705762375,20,20,20,74,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_009151,guenther_2012_emissions_gases_aerosols_nature_version_2_1_megan2_w2955601895,18,18,18,22,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_016163,delworth_2006_gfdl_s_cm2_global_coupled_climate_part_i_w2003164867,28,28,28,32,True,True,354,0.177,valid,
+SAMPLE,(chunk sample),chunk_048824,cowls_2021_ai_gambit_leveraging_artificial_intelligence_combat_climate_change_w3207559276,23,23,23,25,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_036790,treutlein_2026_real_world_energy_data_200_feeders_low_voltage_2602_03521v1,2,2,2,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_035323,bui_2018_carbon_capture_storage_ccs_way_forward_w2784350055,102,102,102,115,True,True,337,0.169,valid,
+SAMPLE,(chunk sample),chunk_017220,randall_2007_climate_their_evaluation_w1705762375,4,4,4,74,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_048957,alam_2020_high_level_penetration_renewable_energy_sources_into_grid_w3033581805,15,15,15,23,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_038312,kartun_giles_2023_introduction_complex_networks_climate_finance_2309_15890v1,4,4,4,12,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_028078,bony_2006_how_well_do_we_understand_evaluate_climate_change_w2052115269,26,26,26,38,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_038243,cardenas_2024_financial_climate_risk_review_recent_advances_key_challenges_2404_07331v1,18,18,18,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_026176,folke_2016_social_ecological_resilience_biosphere_sustainability_science_w2527125744,16,16,16,16,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_023724,rehak_2025_im_possibility_sustainable_artificial_intelligence_why_it_does_2503_17702v1,4,4,4,10,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_014374,shahid_2020_short_term_solar_energy_prediction_machine_learning_algorithms_2012_00688v1,6,6,6,17,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_009066,guenther_2012_emissions_gases_aerosols_nature_version_2_1_megan2_w2955601895,7,7,7,22,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_033393,rosen_2016_prospects_hydrogen_as_energy_carrier_overview_hydrogen_energy_w2277727683,10,10,10,20,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_032344,mittal_2020_nanoparticle_sustainable_agriculture_food_science_recent_advances_future_w3108609864,17,17,17,38,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_005958,steenwerth_2014_climate_smart_agriculture_global_research_agenda_scientific_basis_w2113355006,21,21,21,39,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_049531,achakulwisut_2023_global_fossil_fuel_reduction_pathways_under_different_climate_w4386715594,14,14,14,15,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_003088,gr_bler_2018_low_energy_demand_scenario_meeting_1_5_c_w2800190939,105,105,105,121,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_007186,friedlingstein_2019_global_carbon_budget_2019_w2979653715,26,26,26,56,True,True,700,0.35,valid,
+SAMPLE,(chunk sample),chunk_010017,greenhalgh_2017_beyond_adoption_new_framework_theorizing_evaluating_nonadoption_abandonment_w2765304416,10,10,10,21,True,True,698,0.349,valid,
+SAMPLE,(chunk sample),chunk_041121,li_2020_open_source_energy_system_modeling_break_even_costs_2001_07264v1,66,66,66,78,True,True,594,0.297,valid,
+SAMPLE,(chunk sample),chunk_010485,andreae_2006_black_carbon_brown_carbon_nature_light_absorbing_carbonaceous_w2132436820,5,5,5,18,True,True,191,0.955,weak_overlap,text present but short (191 chars); page exists but evidence confidence is low
+SAMPLE,(chunk sample),chunk_044597,martin_2011_hadgem2_family_met_office_unified_climate_configurations_w2140155467,25,25,25,35,True,True,699,0.349,valid,
+SAMPLE,(chunk sample),chunk_027667,abdin_2019_hydrogen_as_energy_vector_w2998704111,12,12,12,32,True,True,700,0.35,valid,
