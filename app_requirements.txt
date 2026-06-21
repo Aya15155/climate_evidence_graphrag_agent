@@ -1,0 +1,35 @@
+﻿# API
+fastapi
+uvicorn
+pydantic
+python-dotenv
+
+# Data processing
+pandas
+numpy
+PyYAML
+requests
+tqdm
+
+# PDF processing
+pdfplumber
+
+# Retrieval and ML
+scikit-learn==1.7.2
+rank-bm25
+sentence-transformers
+qdrant-client
+
+# Databases
+pymongo
+neo4j
+
+# Online learning and AutoML
+river
+optuna
+matplotlib
+
+# Testing
+pytest
+
+streamlit
