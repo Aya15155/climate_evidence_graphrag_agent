@@ -26,11 +26,17 @@ class HybridRetriever:
         self.normalization = normalization
 
     def search(self, query: str, k: int = 5, filters: dict | None = None):
-        # Fetch 20 candidates from each retriever so fusion has enough
-        # overlap to work with; final top-k is selected after merging.
-        bm25_results = self.bm25.search(query, k=20)
+        # Fetch a deeper candidate pool before fusion.
+        #
+        # D3 exact-chunk evaluation is stricter than document-level retrieval:
+        # the relevant evidence may be outside a shallow top-20 list even when
+        # the correct document is found.  Use k-aware overfetching so callers
+        # can request larger reranking pools without changing this class again.
+        candidate_k = max(20, min(max(k * 3, k), 200))
+
+        bm25_results = self.bm25.search(query, k=candidate_k)
         dense_results = (
-            self.dense.search(query, k=20, filters=filters)
+            self.dense.search(query, k=candidate_k, filters=filters)
             if self.dense else []
         )
         # Filters only apply to dense — BM25 has no metadata index.

@@ -1,0 +1,16 @@
+query_id,gold_chunk_id,blend_rank@16,in_top5,source_type
+D3Q001,chunk_036782,2,True,hybrid
+D3Q002,chunk_006699,1,True,hybrid
+D3Q003,chunk_036179,1,True,hybrid
+D3Q004,chunk_023284,1,True,hybrid
+D3Q005,chunk_039454,2,True,hybrid
+D3Q006,chunk_035742,1,True,hybrid
+D3Q007,chunk_021253,1,True,hybrid
+D3Q008,chunk_006718,2,True,hybrid
+D3Q009,chunk_033119,1,True,hybrid
+D3Q010,chunk_036501,5,True,hybrid
+D3Q011,chunk_035143,4,True,hybrid
+D3Q012,chunk_024912,1,True,hybrid
+D3Q013,chunk_045100,3,True,hybrid
+D3Q014,chunk_029715,4,True,hybrid
+D3Q015,chunk_032344,1,True,hybrid

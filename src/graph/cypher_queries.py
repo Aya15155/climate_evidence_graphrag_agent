@@ -70,6 +70,7 @@ GRAPHRAG_REASONING = {
         RETURN c.name AS country,
                p.name AS policy,
                t.name AS target,
+               d.doc_id AS doc_id,
                d.title AS source_doc,
                d.year AS doc_year
         ORDER BY policy, target, doc_year DESC
@@ -84,6 +85,7 @@ GRAPHRAG_REASONING = {
                sector.name AS affected_sector,
                impact.confidence AS impact_confidence,
                impact.evidence_page AS evidence_page,
+               d.doc_id AS doc_id,
                d.title AS source_doc
         ORDER BY climate_risk, affected_sector
     """,
@@ -100,6 +102,7 @@ GRAPHRAG_REASONING = {
                sector.name AS applicable_sector,
                region.name AS relevant_region,
                m.evidence_page AS evidence_page,
+               d.doc_id AS doc_id,
                d.title AS source_doc,
                d.year AS source_year
         ORDER BY technology, mitigated_risk
@@ -139,6 +142,7 @@ GRAPHRAG_REASONING = {
                country.name AS country,
                policy.name AS relevant_policy,
                coalesce(occurs.evidence_page, impact.evidence_page) AS evidence_page,
+               d.doc_id AS doc_id,
                d.title AS source_doc
         ORDER BY climate_risk, impacted_sector, relevant_policy
     """,

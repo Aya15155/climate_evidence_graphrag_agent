@@ -21,6 +21,20 @@ retrieval:
   bm25_weight: 0.5
   dense_weight: 0.5
 
+graphrag:
+  # D3 exact-chunk improvement:
+  # Search a deeper hybrid pool, then rerank extra chunks from likely
+  # source documents before final MMR context selection.
+  max_graph_chunks: 8
+  max_hybrid_chunks: 8
+  graph_weight: 0.4
+  hybrid_weight: 0.6
+  mmr_lambda: 0.9
+  candidate_doc_count: 5
+  chunks_per_candidate_doc: 20
+  cosine_threshold: 0.25
+  fallback_to_hybrid: true
+
 neo4j:
   uri: bolt://localhost:7687
   user: neo4j

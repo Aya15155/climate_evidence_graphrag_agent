@@ -1,3 +1,10 @@
 .venv/
 __pycache__/
 *.pyc
+.env
+
+# Local Neo4j database volume - do not commit
+neo4j_data/
+
+# Local Kaggle upload packages
+kaggle_upload/

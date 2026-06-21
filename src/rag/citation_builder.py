@@ -253,13 +253,32 @@ class CitationBuilder:
             h.doc_id or "" for h in result.graph_hits
         ]
         chunk_ids = [c.chunk_id for c in result.blended_chunks]
+        fallback_used = result.retrieval_type == "hybrid_fallback"
+        if result.retrieval_type == "empty":
+            failure_note = "No graph or hybrid evidence retrieved."
+        elif fallback_used:
+            failure_note = "Graph path returned insufficient usable evidence; hybrid fallback supplied the context."
+        elif not result.graph_hits:
+            failure_note = "No graph hits were returned, but retrieval did not require fallback-only mode."
+        elif not result.citation_pages:
+            failure_note = "Evidence retrieved, but no page-level citations were resolved."
+        else:
+            failure_note = ""
         return {
             "query": result.query,
+            "template_used": result.template_used or "",
             "cypher_query": (result.cypher_query or "")[:300].replace("\n", " "),
             "graph_hits": "; ".join(graph_hit_ids[:5]),
             "chunk_ids": "; ".join(chunk_ids[:8]),
             "citation_pages": "; ".join(result.citation_pages[:8]),
             "retrieval_type": result.retrieval_type,
+            "fallback_used": fallback_used,
+            "failure_note": failure_note,
+            "latency_sec": getattr(result, "latency_sec", None),
+            "n_graph_hits": len(result.graph_hits),
+            "n_graph_chunks": len(result.graph_chunks),
+            "n_hybrid_chunks": len(result.hybrid_chunks),
+            "n_blended_chunks": len(result.blended_chunks),
             "answer_quality_notes": result.answer_quality_notes or self._auto_quality_note(result),
         }
 

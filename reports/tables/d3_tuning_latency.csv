@@ -1,0 +1,4 @@
+stage,status,duration_sec,hardware,torch_version,cuda_available,peft_installed,bitsandbytes_installed,trl_installed,notes
+environment_check,completed,0,not_available,2.12.0+cpu,False,False,False,False,Checked local project .venv capability for PEFT/QLoRA.
+tuning_dataset_build,completed,0,local CPU/file generation,2.12.0+cpu,False,False,False,False,Built 15 JSONL rows from D3 gold evidence.
+qlora_training,not_run_non_feasible_local_environment,0,not_available,2.12.0+cpu,False,False,False,False,"CUDA GPU not available; peft not installed; bitsandbytes not installed; trl not installed; tuning dataset is small (15 rows), suitable only for demo/format check, not robust model training"

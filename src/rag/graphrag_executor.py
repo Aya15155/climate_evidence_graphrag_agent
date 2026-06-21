@@ -20,6 +20,7 @@ import os
 import re
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -495,7 +496,10 @@ class GraphExpander:
 
                 # Score relevance vs. query
                 chunk_emb = self._embed(text[:512])
-                sim = cosine_similarity(query_emb, chunk_emb)
+                sim = max(
+                    cosine_similarity(query_emb, chunk_emb),
+                    self._query_overlap_score(query, text),
+                )
                 if sim < self.cosine_threshold:
                     LOGGER.debug("Dropping graph chunk %s (sim=%.3f < threshold)", cid, sim)
                     continue
@@ -503,8 +507,8 @@ class GraphExpander:
                 blended = BlendedChunk(
                     chunk_id=cid,
                     text=text,
-                    doc_id=chunk.get("doc_id", hit.doc_id or ""),
-                    page=chunk.get("page") or hit.page,
+                    doc_id=self._chunk_doc_id(chunk) or hit.doc_id or "",
+                    page=self._chunk_page_start(chunk) or hit.page,
                     source_type="graph",
                     combined_score=sim,
                     graph_score=sim,
@@ -533,7 +537,8 @@ class GraphExpander:
         if hit.doc_id and hit.page is not None:
             page_matches = [
                 c for c in chunks.values()
-                if c.get("doc_id") == hit.doc_id and c.get("page") == hit.page
+                if self._chunk_doc_id(c) == hit.doc_id
+                and self._page_in_chunk(c, hit.page)
             ]
             if page_matches:
                 return page_matches[:3]
@@ -542,11 +547,60 @@ class GraphExpander:
         if hit.doc_id:
             doc_matches = [
                 c for c in chunks.values()
-                if c.get("doc_id") == hit.doc_id
+                if self._chunk_doc_id(c) == hit.doc_id
             ]
-            return doc_matches[:3]
+            return doc_matches[:25]
 
         return []
+
+    @staticmethod
+    def _chunk_doc_id(chunk: Dict[str, Any]) -> str:
+        return str(
+            chunk.get("doc_id", "")
+            or chunk.get("document_id", "")
+            or chunk.get("source_document_id", "")
+        ).strip()
+
+    @staticmethod
+    def _chunk_page_start(chunk: Dict[str, Any]) -> Optional[int]:
+        value = (
+            chunk.get("page")
+            or chunk.get("page_number")
+            or chunk.get("page_num")
+            or chunk.get("page_start")
+        )
+        try:
+            return int(value) if value is not None and value != "" else None
+        except (TypeError, ValueError):
+            return None
+
+    @classmethod
+    def _page_in_chunk(cls, chunk: Dict[str, Any], page: Any) -> bool:
+        try:
+            page_int = int(page)
+        except (TypeError, ValueError):
+            return False
+        start = cls._chunk_page_start(chunk)
+        end_value = chunk.get("page_end") or start
+        try:
+            end = int(end_value) if end_value is not None and end_value != "" else start
+        except (TypeError, ValueError):
+            end = start
+        if start is None:
+            return False
+        return start <= page_int <= (end or start)
+
+    @staticmethod
+    def _query_overlap_score(query: str, text: str) -> float:
+        q_terms = [
+            t for t in re.findall(r"[a-zA-Z0-9_\-]{4,}", query.lower())
+            if len(t) >= 4
+        ]
+        if not q_terms:
+            return 0.0
+        text_l = text.lower()
+        matched = sum(1 for term in set(q_terms) if term in text_l)
+        return matched / max(1, len(set(q_terms)))
 
     def _embed(self, text: str) -> np.ndarray:
         """Embed text using dense_retriever if available, else TF-IDF hash fallback."""
@@ -587,6 +641,8 @@ class HybridBlender:
         mmr_lambda: float = 0.7,
         top_k: int = 10,
         dense_retriever=None,
+        candidate_doc_count: int = 5,
+        chunks_per_candidate_doc: int = 20,
     ):
         self.hybrid_retriever = hybrid_retriever
         self.graph_weight = graph_weight
@@ -594,12 +650,16 @@ class HybridBlender:
         self.mmr_lambda = mmr_lambda
         self.top_k = top_k
         self.dense_retriever = dense_retriever
+        self.candidate_doc_count = candidate_doc_count
+        self.chunks_per_candidate_doc = chunks_per_candidate_doc
+        self._chunk_lookup: Optional[Dict[str, Dict]] = None
+        self._doc_index: Optional[Dict[str, List[Dict]]] = None
 
     def blend(
         self,
         query: str,
         graph_chunks: List[BlendedChunk],
-        k_hybrid: int = 8,
+        k_hybrid: int = 50,
     ) -> Tuple[List[BlendedChunk], List[BlendedChunk]]:
         """
         Returns (blended_chunks, hybrid_only_chunks).
@@ -607,6 +667,12 @@ class HybridBlender:
         Why parallel execution (not sequential):
         Graph hits fail ~30% of the time on edge-case queries.
         Running hybrid independently ensures we always have fallback evidence.
+
+        D3 exact-chunk requirement:
+        A shallow top-8 hybrid pool can find the right document but miss the
+        exact supporting chunk.  We therefore retrieve a deeper pool and then
+        expand/rerank chunks from the most likely documents before the final
+        MMR step.
         """
         # Run hybrid retrieval independently
         raw_hybrid = self.hybrid_retriever.search(query, k=k_hybrid)
@@ -637,6 +703,12 @@ class HybridBlender:
             else:
                 pool[c.chunk_id] = c
 
+        # Exact-chunk repair: if a likely document is already represented,
+        # inspect more chunks from that document and add the most query-aligned
+        # ones to the candidate pool.  This does not use gold labels; it only
+        # uses the documents surfaced by graph/hybrid evidence.
+        self._add_document_rerank_candidates(query=query, pool=pool)
+
         # MMR re-rank
         blended = self._mmr_rerank(query, list(pool.values()), k=self.top_k)
         return blended, hybrid_chunks
@@ -644,16 +716,128 @@ class HybridBlender:
     def _wrap_hybrid_chunks(self, raw_results: List[Dict]) -> List[BlendedChunk]:
         out = []
         for r in raw_results:
+            page = (
+                r.get("page")
+                or r.get("page_number")
+                or r.get("page_num")
+                or r.get("page_start")
+            )
             out.append(BlendedChunk(
                 chunk_id=r.get("chunk_id", ""),
                 text=r.get("text", "") or r.get("content", ""),
-                doc_id=r.get("doc_id", ""),
-                page=r.get("page"),
+                doc_id=r.get("doc_id", "") or r.get("document_id", ""),
+                page=page,
                 source_type="hybrid",
                 combined_score=float(r.get("fused_score", r.get("rrf_score", 0.0))),
                 hybrid_score=float(r.get("fused_score", r.get("rrf_score", 0.0))),
             ))
         return out
+
+    def _ensure_chunk_indexes(self) -> None:
+        """Build chunk/document lookup tables from the retriever corpus."""
+        if self._chunk_lookup is not None and self._doc_index is not None:
+            return
+
+        chunks: List[Dict] = []
+        bm25 = getattr(self.hybrid_retriever, "bm25", None)
+        if bm25 is not None:
+            chunks = list(getattr(bm25, "chunks", []) or [])
+
+        self._chunk_lookup = {}
+        self._doc_index = {}
+        for chunk in chunks:
+            cid = str(chunk.get("chunk_id", "")).strip()
+            doc_id = str(
+                chunk.get("document_id", "")
+                or chunk.get("doc_id", "")
+                or chunk.get("source_document_id", "")
+            ).strip()
+            if not cid or not doc_id:
+                continue
+            self._chunk_lookup[cid] = chunk
+            self._doc_index.setdefault(doc_id, []).append(chunk)
+
+    def _add_document_rerank_candidates(
+        self,
+        query: str,
+        pool: Dict[str, BlendedChunk],
+    ) -> None:
+        """
+        Add high-overlap chunks from documents already surfaced by graph/hybrid.
+
+        This improves exact chunk recall without cheating with gold IDs:
+        - The document must first be found by graph or hybrid retrieval.
+        - Candidate chunks are ranked only by query/text overlap.
+        - The final context is still selected by MMR.
+        """
+        self._ensure_chunk_indexes()
+        if not self._doc_index:
+            return
+
+        doc_scores: Dict[str, float] = {}
+        for chunk in pool.values():
+            doc_id = chunk.doc_id
+            if not doc_id and self._chunk_lookup and chunk.chunk_id in self._chunk_lookup:
+                raw = self._chunk_lookup[chunk.chunk_id]
+                doc_id = str(raw.get("document_id", "") or raw.get("doc_id", ""))
+                chunk.doc_id = doc_id
+                if not chunk.page:
+                    chunk.page = raw.get("page") or raw.get("page_start")
+            if not doc_id:
+                continue
+            doc_scores[doc_id] = max(doc_scores.get(doc_id, 0.0), chunk.combined_score)
+
+        if not doc_scores:
+            return
+
+        top_docs = sorted(doc_scores.items(), key=lambda x: x[1], reverse=True)[
+            : self.candidate_doc_count
+        ]
+
+        for doc_id, doc_score in top_docs:
+            scored_chunks: List[Tuple[float, Dict]] = []
+            for raw in self._doc_index.get(doc_id, []):
+                cid = str(raw.get("chunk_id", "")).strip()
+                if not cid or cid in pool:
+                    continue
+                text = str(raw.get("text", "") or raw.get("content", ""))
+                local_score = self._query_overlap_score(query, text)
+                if local_score <= 0:
+                    continue
+                scored_chunks.append((local_score, raw))
+
+            scored_chunks.sort(key=lambda x: x[0], reverse=True)
+
+            for local_score, raw in scored_chunks[: self.chunks_per_candidate_doc]:
+                cid = str(raw.get("chunk_id", "")).strip()
+                page = raw.get("page") or raw.get("page_start")
+                pool[cid] = BlendedChunk(
+                    chunk_id=cid,
+                    text=str(raw.get("text", "") or raw.get("content", "")),
+                    doc_id=doc_id,
+                    page=page,
+                    source_type="doc_rerank",
+                    # Keep document-local expansion helpful but not dominant.
+                    # Original graph/hybrid hits should not be displaced by a
+                    # flood of same-document chunks.  This score is intentionally
+                    # comparable to, but usually below, strong hybrid hits.
+                    combined_score=float(0.15 + (0.45 * doc_score) + (0.35 * local_score)),
+                    graph_score=0.0,
+                    hybrid_score=float(local_score),
+                )
+
+    @staticmethod
+    def _query_overlap_score(query: str, text: str) -> float:
+        """Fast lexical score for document-local chunk reranking."""
+        q_terms = [
+            t for t in re.findall(r"[a-zA-Z0-9_\-]{4,}", query.lower())
+            if len(t) >= 4
+        ]
+        if not q_terms:
+            return 0.0
+        text_l = text.lower()
+        matched = sum(1 for term in q_terms if term in text_l)
+        return matched / max(1, len(set(q_terms)))
 
     @staticmethod
     def _minmax(values: List[float]) -> List[float]:
@@ -686,6 +870,22 @@ class HybridBlender:
         lam = self.mmr_lambda
         selected: List[BlendedChunk] = []
         remaining = list(candidates)
+
+        # Preserve the strongest original graph/hybrid evidence before MMR.
+        #
+        # MMR is useful for diversity, but in D3 exact-chunk evaluation it can
+        # push a high-scoring exact lexical hit from rank 2-5 down to rank 6+
+        # simply because a neighbouring chunk is already selected.  Anchor the
+        # top graph/hybrid candidates first, then diversify the rest.
+        anchor_count = min(5, k)
+        anchors = sorted(
+            [c for c in remaining if c.source_type != "doc_rerank"],
+            key=lambda c: c.combined_score,
+            reverse=True,
+        )[:anchor_count]
+        for anchor in anchors:
+            selected.append(anchor)
+            remaining.remove(anchor)
 
         while remaining and len(selected) < k:
             if not selected:
@@ -903,7 +1103,16 @@ class GraphRAGExecutor:
         """
         import yaml
 
-        with open(config_path, "r") as fh:
+        config_file = Path(config_path).resolve()
+        project_root = config_file.parent.parent
+
+        def _project_path(value: str) -> str:
+            path = Path(value)
+            if path.is_absolute():
+                return str(path)
+            return str((project_root / path).resolve())
+
+        with open(config_file, "r") as fh:
             cfg = yaml.safe_load(fh)
 
         neo4j_cfg = cfg.get("neo4j", {})
@@ -919,23 +1128,29 @@ class GraphRAGExecutor:
         # Import existing D2 components
         try:
             from src.retrieval.bm25_retriever import BM25Retriever
-            from src.retrieval.dense_retriever import DenseRetriever
+            from src.retrieval.dense_retriever import NumpyDenseRetriever
             from src.retrieval.hybrid_retriever import HybridRetriever
         except ModuleNotFoundError:
             from retrieval.bm25_retriever import BM25Retriever
-            from retrieval.dense_retriever import DenseRetriever
+            from retrieval.dense_retriever import NumpyDenseRetriever
             from retrieval.hybrid_retriever import HybridRetriever
 
-        chunk_store = cfg.get("retrieval", {}).get("chunks_path", "data/sample/sample_chunks.json")
-        with open(chunk_store, "r") as fh:
+        chunk_store = _project_path(
+            cfg.get("retrieval", {}).get("chunks_path", "data/sample/sample_chunks.json")
+        )
+        with open(chunk_store, "r", encoding="utf-8") as fh:
             chunks = json.load(fh)
 
         bm25 = BM25Retriever(chunks)
-        dense = DenseRetriever(
-            embeddings_path=cfg.get("retrieval", {}).get("dense_cache",
-                                                         "data/embeddings/chunks_tfidf_lsa.npy"),
-            chunks=chunks,
+        dense_cache = _project_path(
+            cfg.get("retrieval", {}).get("dense_cache", "data/embeddings/chunks_tfidf_lsa.npy")
         )
+        if os.path.exists(dense_cache):
+            dense = NumpyDenseRetriever.load(chunks, dense_cache)
+        else:
+            dense = NumpyDenseRetriever(chunks)
+            os.makedirs(os.path.dirname(dense_cache), exist_ok=True)
+            dense.save(dense_cache)
         hybrid = HybridRetriever(bm25, dense, normalization="rrf")
 
         try:
@@ -966,6 +1181,8 @@ class GraphRAGExecutor:
             mmr_lambda=gr_cfg.get("mmr_lambda", 0.7),
             top_k=gr_cfg.get("max_graph_chunks", 8) + gr_cfg.get("max_hybrid_chunks", 8),
             dense_retriever=dense,
+            candidate_doc_count=gr_cfg.get("candidate_doc_count", 5),
+            chunks_per_candidate_doc=gr_cfg.get("chunks_per_candidate_doc", 20),
         )
         prompt_builder = PromptBuilder()
         citation_builder = CitationBuilder(chunk_store_path=chunk_store)

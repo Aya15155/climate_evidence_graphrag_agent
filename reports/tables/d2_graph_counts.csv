@@ -1,51 +1,51 @@
 type,label_or_relationship,count,category
-node,ClimateRisk,12.0,node
-node,ClimateTopic,13.0,node
-node,Country,12.0,node
+node,ClimateRisk,9.0,node
+node,ClimateTopic,11.0,node
+node,Country,11.0,node
 node,Document,300.0,node
 node,Finding,6.0,node
-node,Indicator,9.0,node
+node,Indicator,7.0,node
 node,Organization,82.0,node
-node,Policy,3.0,node
-node,Region,9.0,node
-node,Sector,14.0,node
-node,Target,3.0,node
-node,Technology,19.0,node
+node,Policy,2.0,node
+node,Region,7.0,node
+node,Sector,10.0,node
+node,Target,2.0,node
+node,Technology,12.0,node
 node,Venue,82.0,node
-relationship,ADDRESSES,32.0,relationship
-relationship,AFFECTS_SECTOR,808.0,relationship
-relationship,DISCUSSES,836.0,relationship
-relationship,DISCUSSES_POLICY,158.0,relationship
-relationship,DISCUSSES_RISK,386.0,relationship
-relationship,DISCUSSES_TARGET,49.0,relationship
+relationship,ADDRESSES,20.0,relationship
+relationship,AFFECTS_SECTOR,805.0,relationship
+relationship,DISCUSSES,813.0,relationship
+relationship,DISCUSSES_POLICY,150.0,relationship
+relationship,DISCUSSES_RISK,239.0,relationship
+relationship,DISCUSSES_TARGET,32.0,relationship
 relationship,EVIDENCES_COUNTRY,6.0,relationship
-relationship,EVIDENCES_RISK,8.0,relationship
+relationship,EVIDENCES_RISK,6.0,relationship
 relationship,EVIDENCES_SECTOR,6.0,relationship
-relationship,EVIDENCES_TECHNOLOGY,6.0,relationship
-relationship,HAS_POLICY,22.0,relationship
-relationship,HAS_RISK,106.0,relationship
-relationship,IMPACTS,12.0,relationship
-relationship,LOCATED_IN,64.0,relationship
-relationship,MENTIONS_COUNTRY,594.0,relationship
-relationship,MENTIONS_REGION,550.0,relationship
-relationship,MENTIONS_TECHNOLOGY,515.0,relationship
-relationship,MITIGATES,7.0,relationship
-relationship,OCCURS_IN,38.0,relationship
+relationship,EVIDENCES_TECHNOLOGY,5.0,relationship
+relationship,HAS_POLICY,16.0,relationship
+relationship,HAS_RISK,76.0,relationship
+relationship,IMPACTS,5.0,relationship
+relationship,LOCATED_IN,54.0,relationship
+relationship,MENTIONS_COUNTRY,592.0,relationship
+relationship,MENTIONS_REGION,549.0,relationship
+relationship,MENTIONS_TECHNOLOGY,396.0,relationship
+relationship,MITIGATES,3.0,relationship
+relationship,OCCURS_IN,21.0,relationship
 relationship,PUBLISHED_BY,300.0,relationship
 relationship,PUBLISHED_IN,300.0,relationship
 relationship,REPORTS_FINDING,6.0,relationship
-relationship,REPORTS_INDICATOR,205.0,relationship
-relationship,SETS_TARGET,9.0,relationship
+relationship,REPORTS_INDICATOR,177.0,relationship
+relationship,SETS_TARGET,4.0,relationship
 relationship,SUPPORTED_BY,6.0,relationship
-statistic,stats_graph_density.nodes,564.0,Graph density (avg rels per node)
-statistic,stats_graph_density.relationships,5029.0,Graph density (avg rels per node)
-statistic,stats_graph_density.avg_relationships_per_node,8.916666666666666,Graph density (avg rels per node)
+statistic,stats_graph_density.nodes,541.0,Graph density (avg rels per node)
+statistic,stats_graph_density.relationships,4587.0,Graph density (avg rels per node)
+statistic,stats_graph_density.avg_relationships_per_node,8.478743068391866,Graph density (avg rels per node)
 statistic,stats_finding_coverage.documents,300.0,Finding coverage across documents
 statistic,stats_finding_coverage.findings,6.0,Finding coverage across documents
 statistic,stats_finding_coverage.documents_with_findings,6.0,Finding coverage across documents
-statistic,stats_technology_coverage.technologies,19.0,Technology mitigation coverage
-statistic,stats_technology_coverage.technologies_with_mitigation_edges,7.0,Technology mitigation coverage
-statistic,stats_risk_coverage.risks,12.0,ClimateRisk impact coverage
-statistic,stats_risk_coverage.risks_with_sector_impacts,7.0,ClimateRisk impact coverage
-statistic,stats_country_policy_coverage.countries,12.0,Country policy coverage
-statistic,stats_country_policy_coverage.countries_with_policies,11.0,Country policy coverage
+statistic,stats_technology_coverage.technologies,12.0,Technology mitigation coverage
+statistic,stats_technology_coverage.technologies_with_mitigation_edges,3.0,Technology mitigation coverage
+statistic,stats_risk_coverage.risks,9.0,ClimateRisk impact coverage
+statistic,stats_risk_coverage.risks_with_sector_impacts,3.0,ClimateRisk impact coverage
+statistic,stats_country_policy_coverage.countries,11.0,Country policy coverage
+statistic,stats_country_policy_coverage.countries_with_policies,10.0,Country policy coverage
