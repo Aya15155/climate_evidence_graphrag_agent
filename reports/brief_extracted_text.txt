@@ -1,0 +1,401 @@
+CSAI415 — Course Project Brief  
+PDF-Papers AI Agent: Hybrid Retrieval + GraphRAG with Online Learning and AutoML 
+ 
+Attribute Details 
+Duration 10 weeks (4 h/week) 
+Project Weight 60% of module grade 
+Team Size 3–4 students 
+Tech (suggested) Python, FastAPI, MongoDB, Qdrant (or 
+similar vector DB), Neo4j, sentence-
+transformers, River, MLflow, 
+Optuna/FLAML, PEFT/QLoRA, pytest, 
+Docker Compose 
+  
+ 
+Project objectives 
+Build an AI agent that answers questions over a corpus of scientific PDFs with grounded 
+citations and page ranges, using hybrid retrieval (lexical+dense), a knowledge graph for 
+reasoning (GraphRAG), lightweight online learning from feedback (River), and a small tuned 
+model (PEFT/QLoRA). 
+Learning outcomes 
+• Design NoSQL schemas for AI workloads (document metadata, chunks, provenance, 
+TTL). 
+• Implement hybrid retrieval and GraphRAG (graph-guided expansion + reranking). 
+• Use AutoML to optimize retrievers (e.g., kNN) or unsupervised cluster gating. 
+• Apply online learning with River to adapt to drift and user feedback. 
+• Fine-tune a small language model with PEFT/QLoRA and integrate it into the RAG 
+pipeline. 
+• Evaluate faithfulness, relevance, latency, and show security mitigations (prompt-
+injection/retrieval-poisoning defenses). 
+Required system components 
+• Ingest: PDF → text → chunks (+overlap) + metadata (title, authors, venue, year, DOI, 
+local path, page map). 
+• Stores: 
+  • MongoDB — chunk/doc metadata, provenance, run cards, evals. 
+  • Vector DB (Qdrant) — embeddings for chunks. 
+  • Neo4j — graph of Paper–(ABOUT)→Topic, Author–(WROTE)→Paper, Paper–
+(PUBLISHED_IN)→Venue (add CITES if time). 
+• Retrieval: BM25 or TF-IDF + dense (e.g., bge-small-en) → hybrid; cross-encoder 
+reranking optional. 
+• GraphRAG: Use Cypher paths to find relevant subgraphs, expand to supporting chunks, 
+blend with vector top-k, then answer with citations. 
+• Agent: Tool-using planner (e.g., simple ReAct/LangGraph style) with tools: 
+vector_search, cypher_query, mongo_lookup, read_pdf_page_range. 
+• Adaptation: River online learner for query-to-topic classification or adaptive hybrid 
+fusion weight; drift handled with ADWIN and lightweight triggers (no brokers). 
+• Tuning: PEFT/QLoRA for a 1–3B model on a small curated Q/A set from your corpus; 
+quantize & cache for latency. 
+• Evaluation: Faithfulness, answer-relevance, Recall@k/NDCG@k, latency p95; safety 
+(source pinning/provenance filtering). 
+• API/UI: FastAPI endpoints (/ask, /ingest, /feedback, /stats) + minimal UI showing 
+answer steps and citations. 
+Dataset guidance 
+• 100–300 open-access PDFs from one topic (e.g., arXiv cs.AI/cs.CL subset, ACL Anthology 
+subset, or departmental theses with permission). 
+• Provide a CSV with: paper_id, title, authors, venue, year, pdf_path/url, topics (optional). 
+Deliverables & weights 
+All deliverables should be through GitHub with commits from all the group members. 
+D1 — Week 5 (15%): Streaming Learner & AutoML Note 
+• AutoML Track (choose A or B): 
+•   A) Supervised auto-tuned kNN retriever (Optuna/FLAML): search over k, metric, SVD 
+dim, normalization, hybrid weight. 
+•   B) Unsupervised clustering for cluster-gating (e.g., KMeans/spherical-kmeans): choose 
+k, SVD, hybrid features; optimize internal metrics + a tiny labeled proxy if available. 
+• Online learning: River component for either (i) query→topic classification or (ii) 
+adaptive hybrid weight from feedback (clicked helpful? y/n). Include drift handling 
+(ADWIN) and prequential metrics plot. 
+• Short report (max 2 pages): Baseline vs AutoML metrics (NDCG@5/Recall@5), p95 
+latency; prequential chart; decisions and pitfalls. 
+• Repo: runnable notebook/script + YAML/JSON run card for the winning config. 
+D2 — Week 7 (15%): Retrieval Stack & Graph Build 
+• Ingestion pipeline: PDF→text→chunks→embeddings stored in Mongo + Qdrant; /search 
+hybrid endpoint (BM25+Dense if possible). 
+• Neo4j graph: loaded nodes/edges with at least Authors, Papers, Topics; 3–5 example 
+Cypher queries. 
+• Diagram: dataflow (ingest→stores→retrieval→graph). 
+• Metrics table: Recall@k/latency for /search on a small query set; top-k examples with 
+citations. 
+• Repo: Docker Compose & seed scripts for stores; basic FastAPI. 
+D3 — Week 9 (15%): GraphRAG Executor, Evaluation & Safety 
+• GraphRAG executor: (1) choose subgraph by Cypher; (2) expand to supporting chunks; 
+(3) hybrid blend and optional rerank; (4) answer with citations and page ranges. 
+• Evaluation: a small gold Q/A set, faithfulness & answer-relevance scores (RAGAS or 
+equivalent), latency p95. 
+• Safety: implement at least one mitigation (e.g., source pinning, provenance filtering, 
+deny risky tool calls); show before/after evidence. 
+• Ablation: vector-only vs graph-guided vs hybrid—compare quality/latency. 
+D4 — Week 10/11 (15%): SLM Tuning & Final Demo Package 
+• PEFT/QLoRA on a small (curated) Q/A set; include a tuning card (dataset size, epochs, 
+lr, LoRA ranks, hardware/time, license). 
+• Integration: run zero-shot vs tuned inside GraphRAG; quantize & cache; final eval table 
+(quality/latency deltas). 
+• Demo: 8-minute live demo + 8–10 page report (architecture, experiments, ablations, 
+failure cases, ethics & licensing, future work). 
+• Repo hygiene: README with one-command setup, .env.example, seeds, test data; pytest 
+smoke tests. 
+Grading rubrics 
+D1 — Week 5 (15%) 
+Criterion 
+(Weight) 
+Excellent (A) Good (B) Satisfactory (C) Weak (D/F) 
+AutoML design 
+(6%) 
+Excellent (A): 
+Clear search 
+space; sensible 
+Good (B): 
+Reasonable 
+space; objective 
+Satisfactory (C): 
+Narrow space 
+or missing 
+Weak (D/F): 
+Ad-hoc; no 
+clear objective; 
+objective 
+(NDCG/Recall + 
+latency); 
+reproducible 
+run card 
+mostly sound; 
+minor 
+reproducibility 
+gaps 
+latency; partial 
+reproducibility 
+not 
+reproducible 
+Online learning 
+(6%) 
+Excellent (A): 
+River learner 
+integrated; 
+correct 
+prequential 
+metrics; 
+ADWIN drift 
+response 
+justified with 
+evidence 
+Good (B): 
+Learner 
+integrated; 
+basic metrics; 
+drift logic 
+present 
+Satisfactory (C): 
+Learner 
+present but 
+poorly 
+evaluated 
+Weak (D/F): 
+Missing or non-
+functional 
+Report quality 
+(3%) 
+Excellent (A): 
+Precise 2-page 
+report; 
+tables/plots; 
+actionable 
+insights 
+Good (B): 
+Mostly clear; 
+minor 
+omissions 
+Satisfactory (C): 
+Minimal 
+narrative; few 
+plots 
+Weak (D/F): 
+Unclear; 
+missing results 
+ 
+D2 — Week 7 (15%) 
+Criterion 
+(Weight) 
+Excellent (A) Good (B) Satisfactory (C) Weak (D/F) 
+Ingest & 
+storage (3%) 
+Excellent (A): 
+Clean chunking; 
+robust PDF 
+parsing; Mongo 
+schema with 
+provenance; 
+Qdrant indexes 
+Good (B): 
+Works; minor 
+schema gaps 
+Satisfactory (C): 
+Works but 
+fragile parsing 
+or minimal 
+schema 
+Weak (D/F): 
+Unreliable or 
+incomplete 
+Hybrid 
+retrieval (5%) 
+Excellent (A): 
+BM25+dense 
+with clear 
+fusion; 
+Recall/latency 
+Good (B): 
+Hybrid works; 
+some metrics 
+Satisfactory (C): 
+Single modality 
+or limited 
+metrics 
+Weak (D/F): 
+Poor retrieval; 
+no metrics 
+table; examples 
+with citations 
+Graph build 
+(5%) 
+Excellent (A): 
+Neo4j model 
+sound; useful 
+Cypher queries; 
+data-store 
+diagram clear 
+Good (B): 
+Graph ok; 2–3 
+queries 
+Satisfactory (C): 
+Minimal graph; 
+trivial queries 
+Weak (D/F): 
+Incomplete or 
+incorrect 
+Engineering 
+(2%) 
+Excellent (A): 
+Docker 
+Compose, 
+FastAPI, scripts 
+polished 
+Good (B): 
+Minor rough 
+edges 
+Satisfactory (C): 
+Runs with 
+effort 
+Weak (D/F): 
+Hard to run 
+ 
+D3 — Week 9 (15%) 
+Criterion 
+(Weight) 
+Excellent (A) Good (B) Satisfactory (C) Weak (D/F) 
+GraphRAG 
+pipeline (8%) 
+Excellent (A): 
+Correct 
+subgraph 
+selection, 
+expansion, 
+hybrid blend, 
+(re)ranking; 
+consistent 
+citations with 
+pages 
+Good (B): 
+Mostly correct; 
+minor gaps 
+Satisfactory (C): 
+Works but 
+brittle or 
+partial 
+Weak (D/F): 
+Not working / 
+missing 
+Evaluation 
+(5%) 
+Excellent (A): 
+Faithfulness & 
+relevance 
+computed; 
+ablation 
+thorough; 
+latency p95 
+reported 
+Good (B): 
+Metrics 
+present; limited 
+ablation 
+Satisfactory (C): 
+Minimal 
+metrics 
+Weak (D/F): No 
+real evaluation 
+Safety (2%) Excellent (A): 
+At least one 
+mitigation with 
+Good (B): 
+Mitigation 
+Satisfactory (C): 
+Rudimentary or 
+ineffective 
+Weak (D/F): 
+Missing 
+before/after 
+evidence; limits 
+documented 
+present; light 
+evidence 
+ 
+D4 — Week 10/11 (15%) 
+Criterion 
+(Weight) 
+Excellent (A) Good (B) Satisfactory (C) Weak (D/F) 
+Tuning & 
+card (5%) 
+Excellent (A): 
+PEFT/QLoRA well-
+configured; clear 
+gains or justified 
+parity; complete 
+tuning card 
+Good (B): 
+Works; 
+modest 
+gains; card 
+mostly 
+complete 
+Satisfactory (C): 
+Marginal/unclear 
+gains; sparse 
+card 
+Weak (D/F): 
+Broken or 
+missing 
+Integration & 
+perf (5%) 
+Excellent (A): Tuned 
+model improves or 
+maintains quality at 
+lower cost; 
+quantization/caching 
+effective 
+Good (B): 
+Integrated; 
+some perf 
+data 
+Satisfactory (C): 
+Integrated with 
+minimal eval 
+Weak (D/F): 
+Not 
+integrated 
+Demo & 
+report (5%) 
+Excellent (A): 
+Cohesive demo; 8–10 
+pp report with 
+ablations, 
+limitations, ethics 
+Good (B): 
+Clear demo; 
+solid report 
+Satisfactory (C): 
+Adequate 
+demo/report 
+Weak (D/F): 
+Disorganized 
+or missing 
+elements 
+ 
+Global grading considerations (apply across deliverables) 
+• Reproducibility: seeds, environment, data paths; one-command run. 
+• Ethics/licensing: dataset licenses, privacy; citation of models/datasets. 
+• Teamwork: clear task ownership in README/report. 
+• Code quality: structure, typing/docstrings, tests. 
+• AI Tool Engagement (applies to all deliverables) This course actively encourages the 
+use of AI tools throughout your project — for brainstorming, design decisions, 
+debugging, evaluation, and writing. Thoughtful AI use is a professional skill you are 
+expected to develop. 
+• For every deliverable, each team member must submit a shareable link to their 
+complete, unedited AI chat history relevant to that deliverable. Logs are not 
+penalised for wrong turns, bad prompts, or AI errors — in fact, these reveal the 
+most about your learning process. Assessment focuses on: 
+• Depth of engagement — are you having substantive technical conversations, or 
+asking for copy-paste answers? 
+• Critical thinking — do you push back, verify, iterate, and adapt AI outputs to 
+your specific problem? 
+• Individual contribution — each member's link must reflect their own genuine 
+involvement in the work. 
+• Submitting no logs, identical logs across members, or logs that do not correspond to 
+the deliverable will be treated as missing evidence and will affect your grade 
+accordingly. 
+ 
+Baseline targets (non-binding but recommended) 
+• Retrieval: Recall@5 ≥ 0.60 on your gold set; MRR↑; p95 latency ≤ 2s on CPU-only small 
+corpora. 
+• Answering: Faithfulness ≥ 0.8, Answer-relevance ≥ 0.8 (RAGAS-style). 
+• Online learning: measurable improvement after drift or feedback (> +5% relative vs 
+static on a temporal slice). 
+• Tuning: +3–5 pts in relevance/faithfulness or equal quality with lower tokens/latency. 

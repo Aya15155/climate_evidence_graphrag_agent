@@ -1,0 +1,64 @@
+deliverable: D1
+track: A_supervised_auto_tuned_knn_retriever
+search_engine: optuna_tpe
+seed: 42
+data:
+  chunks_path: data/sample/sample_chunks.json
+  gold_path: data/gold/d1_retrieval_eval_set.json
+  n_chunks: 49541
+  n_queries: 120
+  evaluation_unit: page
+split:
+  method: random_holdout
+  train_fraction: 0.7
+  train_queries: 84
+  test_queries: 36
+search_space:
+  k:
+  - 5
+  - 10
+  - 15
+  - 20
+  metric:
+  - cosine
+  - euclidean
+  - manhattan
+  svd_dim:
+  - 50
+  - 100
+  - 200
+  - 300
+  normalization:
+  - none
+  - minmax
+  - zscore
+  hybrid_weight: float[0.0, 1.0] (BM25 lexical weight)
+objective: NDCG@5 + 0.25*Recall@5 - 0.0005*p95_latency_ms
+n_trials: 30
+baseline:
+  config:
+    k: 10
+    metric: cosine
+    svd_dim: 100
+    normalization: minmax
+    hybrid_weight: 0.5
+  metrics_test:
+    recall_at_5: 0.6666666666666666
+    ndcg_at_5: 0.522101220887583
+    mrr: 0.4930675805675806
+    p95_latency_ms: 674.4967000267934
+winning_config:
+  k: 20
+  metric: cosine
+  svd_dim: 300
+  normalization: minmax
+  hybrid_weight: 0.8152445172912974
+metrics_test:
+  recall_at_5: 0.8333333333333334
+  ndcg_at_5: 0.6816589138413863
+  mrr: 0.6448992852501624
+  p95_latency_ms: 676.2195250339573
+notes:
+- Evaluation uses page-level evidence units derived from data/gold/d1_retrieval_eval_set.json.
+- All current gold items are auto-generated and marked needs_manual_review=true.
+- hybrid_weight is the BM25 lexical contribution; dense weight is 1 - hybrid_weight.

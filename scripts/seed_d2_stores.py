@@ -1,4 +1,4 @@
-﻿"""Seed or verify D2 stores for MongoDB and Qdrant.
+"""Seed or verify D2 stores for MongoDB and Qdrant.
 
 Usage examples
 --------------

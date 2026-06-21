@@ -1,4 +1,4 @@
-﻿"""FastAPI entrypoint for the D1/D2 repo scope.
+"""FastAPI entrypoint for the D1/D2 repo scope.
 
 D2 requires a working `/search` hybrid endpoint. This module lazily loads the
 local D2 chunk corpus, BM25 index, and cached TF-IDF+LSA dense matrix on the
