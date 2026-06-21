@@ -1,0 +1,14 @@
+{
+  "base_model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+  "adapter_dir": "models/qlora_adapter",
+  "dataset_rows": 15,
+  "epochs": 15,
+  "learning_rate": 0.0002,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "quantization": "4-bit NF4 QLoRA",
+  "hardware": "Tesla T4",
+  "training_duration_sec": 133.31,
+  "metrics_note": "Lightweight lexical/provenance proxy metrics; use human/RAGAS evaluation for final claims if time allows."
+}

@@ -15,7 +15,7 @@ The adaptive component changes the BM25/dense retrieval policy inside the GraphR
 - Run mode: `final`
 - Evaluation status: `final_d3_gold_run`
 - Topic accuracy basis: `gold_true_topic_only`
-- PEFT/QLoRA status: `available_compared`
+- PEFT/QLoRA status: `trained_adapter_compared`
 - Rows per method: `15`
 
 If the evaluation status is partial, the results should be treated as limited evidence rather than a complete final gold-set evaluation.
@@ -24,9 +24,9 @@ If the evaluation status is partial, the results should be treated as limited ev
 
 | Method | strict_chunk_recall@5 | strict_chunk_ndcg@5 | strict_chunk_mrr@5 | document_recall@5 | document_ndcg@5 | document_mrr@5 | page_window_recall@5 | faithfulness | answer_relevance | citation_correctness | citation_hit_rate |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| static_graphrag | 0.8000 | 0.6474 | 0.5967 | 0.9333 | 0.8905 | 0.9000 | 0.9333 | 0.6487 | 0.6727 | 0.9333 | 1.0000 |
-| topic_gated_graphrag | 0.8000 | 0.6474 | 0.5967 | 0.9333 | 0.8905 | 0.9000 | 0.9333 | 0.6487 | 0.6727 | 0.9333 | 1.0000 |
-| feedback_adaptive_graphrag | 0.8000 | 0.6474 | 0.5967 | 0.9333 | 0.8905 | 0.9000 | 0.9333 | 0.6487 | 0.6727 | 0.9333 | 1.0000 |
+| static_graphrag | 0.8000 | 0.8000 | 0.8000 | 0.9333 | 0.8977 | 0.9000 | 0.8667 | 0.6794 | 0.7085 | 0.9333 | 1.0000 |
+| topic_gated_graphrag | 0.8000 | 0.8000 | 0.8000 | 0.9333 | 0.8977 | 0.9000 | 0.8667 | 0.6794 | 0.7085 | 0.9333 | 1.0000 |
+| feedback_adaptive_graphrag | 0.8000 | 0.8000 | 0.8000 | 0.9333 | 0.8977 | 0.9000 | 0.8667 | 0.6794 | 0.7085 | 0.9333 | 1.0000 |
 
 ## Interpretation
 
@@ -40,7 +40,7 @@ Strict chunk-level retrieval is the hardest metric because it only gives credit 
 
 ## PEFT/QLoRA status
 
-PEFT/QLoRA status is recorded as `available_compared`. If tuned output files are unavailable, the notebook does not fabricate a zero-shot vs tuned comparison.
+PEFT/QLoRA status is recorded as `trained_adapter_compared`. If tuned output files are unavailable, the notebook does not fabricate a zero-shot vs tuned comparison.
 
 ## Limitation
 

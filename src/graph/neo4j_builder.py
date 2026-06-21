@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import logging
+import os
 import re
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, Iterable
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional
 
 try:
     from src.ingest.metadata_loader import split_list_field
@@ -14,6 +16,33 @@ except ModuleNotFoundError:
 
 LOGGER = logging.getLogger(__name__)
 
+
+
+
+def load_local_env(project_root: Optional[Path] = None, override: bool = False) -> None:
+    """Load KEY=VALUE pairs from a local .env file without exposing secrets."""
+    candidates: List[Path] = []
+    if project_root is not None:
+        candidates.append(Path(project_root) / ".env")
+    candidates.append(Path.cwd() / ".env")
+    candidates.append(Path(__file__).resolve().parents[2] / ".env")
+
+    for env_path in candidates:
+        if not env_path.exists():
+            continue
+        try:
+            for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+                line = raw_line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                key = key.strip().lstrip("\ufeff")
+                value = value.strip().strip('"').strip("'")
+                if key and (override or key not in os.environ):
+                    os.environ[key] = value
+        except OSError as exc:
+            LOGGER.warning("Could not read local .env file %s: %s", env_path, exc)
+        return
 
 COUNTRY_IDS = {
     "uae": "ARE",
@@ -52,14 +81,20 @@ class ClimateGraphBuilder:
 
     def __init__(
         self,
-        uri: str = "bolt://localhost:7687",
-        user: str = "neo4j",
-        password: str = "climate123",
+        uri: Optional[str] = None,
+        user: Optional[str] = None,
+        password: Optional[str] = None,
+        database: Optional[str] = None,
         retries: int = 3,
         retry_seconds: float = 1.0,
     ):
         from neo4j import GraphDatabase
 
+        load_local_env()
+        uri = uri or os.getenv("NEO4J_URI") or "bolt://localhost:7687"
+        user = user or os.getenv("NEO4J_USER") or os.getenv("NEO4J_USERNAME") or "neo4j"
+        password = password or os.getenv("NEO4J_PASSWORD") or "climate123"
+        self.database = database if database is not None else os.getenv("NEO4J_DATABASE")
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
         last_error: Exception | None = None
         for _ in range(retries):
@@ -73,6 +108,11 @@ class ClimateGraphBuilder:
             f"Could not connect to Neo4j at {uri}. Start Neo4j with docker-compose up -d neo4j "
             "or check NEO4J_URI/NEO4J_USER/NEO4J_PASSWORD."
         ) from last_error
+
+    def _session(self):
+        if self.database:
+            return self.driver.session(database=self.database)
+        return self.driver.session()
 
     def close(self) -> None:
         self.driver.close()
@@ -96,7 +136,7 @@ class ClimateGraphBuilder:
             "CREATE INDEX finding_page_index IF NOT EXISTS FOR (n:Finding) ON (n.doc_id, n.page)",
             "CREATE FULLTEXT INDEX finding_text_index IF NOT EXISTS FOR (n:Finding) ON EACH [n.text]",
         ]
-        with self.driver.session() as session:
+        with self._session() as session:
             for statement in statements:
                 session.run(statement)
 
@@ -105,7 +145,7 @@ class ClimateGraphBuilder:
     ) -> Dict[str, int]:
         processed = 0
         errors = 0
-        with self.driver.session() as session:
+        with self._session() as session:
             for raw in records:
                 rec = self._normalize_document(raw)
                 try:
@@ -117,7 +157,7 @@ class ClimateGraphBuilder:
         return {"processed": processed, "errors": errors}
 
     def upsert_document_graph(self, rec: Dict[str, Any]) -> None:
-        with self.driver.session() as session:
+        with self._session() as session:
             session.execute_write(self._merge_document_graph, self._normalize_document(rec), True)
 
     @staticmethod
@@ -293,7 +333,7 @@ class ClimateGraphBuilder:
     def bulk_upsert_findings(self, records: Iterable[Dict[str, Any]]) -> Dict[str, int]:
         processed = 0
         errors = 0
-        with self.driver.session() as session:
+        with self._session() as session:
             session.run(
                 """
                 MATCH (f:Finding)
@@ -458,7 +498,7 @@ class ClimateGraphBuilder:
                 RETURN count(f) AS count
             """,
         }
-        with self.driver.session() as session:
+        with self._session() as session:
             return {name: session.run(query).single()["count"] for name, query in queries.items()}
 
     def get_orphan_counts(self) -> list[Dict[str, Any]]:
@@ -469,7 +509,7 @@ class ClimateGraphBuilder:
         RETURN label, count
         ORDER BY count DESC
         """
-        with self.driver.session() as session:
+        with self._session() as session:
             return [dict(row) for row in session.run(query)]
 
     def get_node_counts(self) -> Dict[str, int]:
@@ -479,7 +519,7 @@ class ClimateGraphBuilder:
         RETURN label, count(*) AS count
         ORDER BY label
         """
-        with self.driver.session() as session:
+        with self._session() as session:
             return {row["label"]: row["count"] for row in session.run(query)}
 
     def get_relationship_counts(self) -> Dict[str, int]:
@@ -488,5 +528,7 @@ class ClimateGraphBuilder:
         RETURN type(r) AS rel_type, count(*) AS count
         ORDER BY rel_type
         """
-        with self.driver.session() as session:
+        with self._session() as session:
             return {row["rel_type"]: row["count"] for row in session.run(query)}
+
+

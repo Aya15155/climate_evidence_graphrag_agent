@@ -1,3 +1,3 @@
 method,training_status,dataset_rows,faithfulness,answer_relevance,citation_correct,mean_latency_ms,p95_latency_ms,model_or_adapter,notes
-zero_shot_graphrag_baseline,completed_baseline_only,15,0.69875,0.7275,0.75,269.45,378.11999999999995,"base RAG/GraphRAG pipeline, no fine-tuned adapter",Baseline summarized from reports/tables/d3_rag_eval_metrics.csv. This is the zero-shot comparison point.
-qlora_tuned_adapter,not_run_non_feasible_local_environment,15,,,,,,not produced,"Tuned comparison not fabricated. Non-feasibility reason: CUDA GPU not available; peft not installed; bitsandbytes not installed; trl not installed; tuning dataset is small (15 rows), suitable only for demo/format check, not robust model training"
+zero_shot_graphrag_baseline,completed_baseline_only,15,0.1912,0.1912,0.2667,10305.12,11824.94,TinyLlama/TinyLlama-1.1B-Chat-v1.0,Base model zero-shot on same 15-row QA set.
+qlora_tuned_adapter,completed,15,0.2259,0.2259,1.0,17983.07,18266.5,models/qlora_adapter,Kaggle GPU QLoRA run; metrics are lightweight lexical/provenance proxies on the 15-row tuning/eval set; adapter saved locally at models/qlora_adapter; epochs=15.

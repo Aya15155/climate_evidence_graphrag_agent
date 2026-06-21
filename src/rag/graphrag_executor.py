@@ -27,6 +27,50 @@ import numpy as np
 
 LOGGER = logging.getLogger(__name__)
 
+
+def redact_sensitive_text(value: object) -> str:
+    """Redact API keys and credentials from exception/log text."""
+    text = str(value)
+    for name in ["GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY", "NEO4J_PASSWORD"]:
+        secret = os.getenv(name)
+        if secret:
+            text = text.replace(secret, f"[{name}_REDACTED]")
+    text = re.sub(r"([?&]key=)[^\s)]+", r"\1[REDACTED_API_KEY]", text)
+    text = re.sub(r"key=[A-Za-z0-9._\-]+", "key=[REDACTED_API_KEY]", text)
+    return text
+
+
+def load_local_env(project_root: Optional[Path] = None, override: bool = False) -> None:
+    """
+    Load simple KEY=VALUE pairs from a local .env file without requiring python-dotenv.
+
+    This is intentionally small because the project already reads credentials from
+    environment variables.  The helper only bridges local notebooks/scripts to the
+    ignored project .env file. Existing process environment values are preserved.
+    """
+    candidates: List[Path] = []
+    if project_root is not None:
+        candidates.append(Path(project_root) / ".env")
+    candidates.append(Path.cwd() / ".env")
+    candidates.append(Path(__file__).resolve().parents[2] / ".env")
+
+    for env_path in candidates:
+        if not env_path.exists():
+            continue
+        try:
+            for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+                line = raw_line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                key = key.strip().lstrip("\ufeff")
+                value = value.strip().strip('"').strip("'")
+                if key and (override or key not in os.environ):
+                    os.environ[key] = value
+        except OSError as exc:
+            LOGGER.warning("Could not read local .env file %s: %s", env_path, exc)
+        return
+
 # ---------------------------------------------------------------------------
 # Alias normalisation (mirrors schema aliases.yaml)
 # ---------------------------------------------------------------------------
@@ -196,11 +240,13 @@ class SubgraphSelector:
         llm_classify: bool = True,
         gemini_api_key: Optional[str] = None,
         cypher_timeout_sec: int = 10,
+        database: Optional[str] = None,
     ):
         self.driver = neo4j_driver
         self.llm_classify = llm_classify
         self.gemini_api_key = gemini_api_key or os.getenv("GEMINI_API_KEY", "")
         self.cypher_timeout_sec = cypher_timeout_sec
+        self.database = database or os.getenv("NEO4J_DATABASE")
 
         try:
             from src.graph.cypher_queries import GRAPHRAG_REASONING
@@ -220,12 +266,10 @@ class SubgraphSelector:
         Why LLM-first: handles paraphrased entity names and multi-entity queries.
         Fallback to keywords: avoids latency for obvious queries.
         """
-        if self.llm_classify and self.gemini_api_key:
-            try:
-                return self._classify_with_llm(query)
-            except Exception as exc:
-                LOGGER.warning("LLM classification failed (%s); using keyword routing.", exc)
-
+        # D3 batch evaluation should be deterministic and should not spend Gemini quota
+        # on routing.  The LLM classifier is intentionally bypassed because malformed
+        # JSON / 429 responses were repeatedly polluting notebook runs.  Gemini is still
+        # used later for answer generation.
         return self._classify_with_keywords(query)
 
     def _classify_with_llm(self, query: str) -> Tuple[Optional[str], Dict[str, Any]]:
@@ -268,11 +312,13 @@ Normalise entity names to slugs (lowercase, underscores). Use ISO alpha-3 for co
             ],
             "generationConfig": {"temperature": 0.0, "maxOutputTokens": 256},
         }
-        url = (
-            f"https://generativelanguage.googleapis.com/v1beta/models/"
-            f"gemini-2.5-flash:generateContent?key={self.gemini_api_key}"
+        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+        resp = requests.post(
+            url,
+            headers={"x-goog-api-key": self.gemini_api_key},
+            json=payload,
+            timeout=15,
         )
-        resp = requests.post(url, json=payload, timeout=15)
         resp.raise_for_status()
         raw_text = resp.json()["candidates"][0]["content"]["parts"][0]["text"]
         # Strip markdown fences if present
@@ -350,7 +396,8 @@ Normalise entity names to slugs (lowercase, underscores). Use ISO alpha-3 for co
 
         hits: List[GraphHit] = []
         try:
-            with self.driver.session() as session:
+            session_kwargs = {"database": self.database} if self.database else {}
+            with self.driver.session(**session_kwargs) as session:
                 result = session.run(
                     cypher,
                     **all_params,
@@ -967,7 +1014,14 @@ class AnswerGenerator:
             LOGGER.warning("No GEMINI_API_KEY found; returning prompt as mock answer.")
             return f"[MOCK — no API key]\n\n{prompt[:500]}", [c["citation_string"] for c in citations]
 
-        answer = self._call_gemini(prompt)
+        try:
+            answer = self._call_gemini(prompt)
+        except Exception as exc:
+            LOGGER.warning(
+                "Gemini answer generation failed (%s); returning grounded mock prompt.",
+                redact_sensitive_text(exc),
+            )
+            answer = "[MOCK - Gemini answer generation failed or disabled]\n\n" + prompt[:1200]
         citation_strings = [c["citation_string"] for c in citations]
         return answer, citation_strings
 
@@ -981,11 +1035,13 @@ class AnswerGenerator:
                 "maxOutputTokens": self.max_tokens,
             },
         }
-        url = (
-            f"https://generativelanguage.googleapis.com/v1beta/models/"
-            f"{self.model}:generateContent?key={self.gemini_api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent"
+        resp = requests.post(
+            url,
+            headers={"x-goog-api-key": self.gemini_api_key},
+            json=payload,
+            timeout=30,
         )
-        resp = requests.post(url, json=payload, timeout=30)
         resp.raise_for_status()
         return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
 
@@ -1105,6 +1161,7 @@ class GraphRAGExecutor:
 
         config_file = Path(config_path).resolve()
         project_root = config_file.parent.parent
+        load_local_env(project_root, override=True)
 
         def _project_path(value: str) -> str:
             path = Path(value)
@@ -1117,8 +1174,13 @@ class GraphRAGExecutor:
 
         neo4j_cfg = cfg.get("neo4j", {})
         uri = os.getenv("NEO4J_URI", neo4j_cfg.get("uri", "bolt://localhost:7687"))
-        user = os.getenv("NEO4J_USER", neo4j_cfg.get("user", "neo4j"))
+        user = (
+            os.getenv("NEO4J_USER")
+            or os.getenv("NEO4J_USERNAME")
+            or neo4j_cfg.get("user", "neo4j")
+        )
         pwd = os.getenv("NEO4J_PASSWORD", neo4j_cfg.get("password", "climate123"))
+        database = os.getenv("NEO4J_DATABASE", neo4j_cfg.get("database"))
 
         from neo4j import GraphDatabase
         driver = GraphDatabase.driver(uri, auth=(user, pwd))
@@ -1167,6 +1229,7 @@ class GraphRAGExecutor:
             llm_classify=True,
             gemini_api_key=gemini_key,
             cypher_timeout_sec=gr_cfg.get("cypher_timeout_sec", 10),
+            database=database,
         )
         expander = GraphExpander(
             chunk_store_path=chunk_store,

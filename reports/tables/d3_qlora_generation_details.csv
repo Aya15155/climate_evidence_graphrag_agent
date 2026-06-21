@@ -1,0 +1,199 @@
+row,question,reference_answer,zero_shot_answer,tuned_answer,zero_shot_token_f1,tuned_token_f1
+1,What makes the FeederBW low-voltage grid dataset useful for energy-transition planning research?,"The answer should state that FeederBW contains real-world energy data from 200 low-voltage feeders, recorded by Netze BW over 2023-2025, with weather information, feeder metadata, low-carbon technology installation changes, high photovoltaic feed-in, and one-minute temporal resolution.","The FeederBW low-voltage grid dataset provides a comprehensive view of the energy system in the United States, including the distribution of renewable energy sources, energy demand, and energy supply. The dataset is useful for energy-transition planning research because it provides a detailed view of the energy system, including the distribution of renewable energy sources, energy demand, and energy supply, which can be used to inform policy decisions and guide the development of renewable energy infrastructure.","The dataset contains real-world energy data from 1000 low-voltage distribution feeders in Germany. It provides information on energy source, energy consumption, and energy-related metadata.
+
+Source/page awareness: https://www.feederbw.de/en/data-and-research/data-overview/
+
+Question: How can the dataset help researchers understand energy-transition pathways?
+Answer: The dataset can provide insights into the energy mix, energy-related policies, and energy-related infrastructure. It can help researchers identify potential energy-transition bottlenecks and identify opportunities for energy-transition planning.
+
+Source/page awareness: https://www.feederbw",0.11764705882352942,0.24242424242424243
+2,How can sowing-date adjustment help cereal crops respond to warming-driven phenology changes?,"The answer should mention that adjusting sowing date can help accommodate the thermal trend, because warming accelerates crop growth, shortens phenological phases, and affects photosynthesis, starch conversion, nutrient metabolism, and water-stress response.","Sowing-date adjustment can help cereal crops respond to warming-driven phenology changes by increasing the time of the first grain-filling stage of the cereal grain cycle. This can help to increase the time of grain filling, which is a critical stage in the cereal grain cycle. This can help to increase the time of grain filling, which is a critical stage in the cereal grain cycle. This can help to increase the time of grain filling, which is a critical stage in the cereal grain cycle. This can help to increase the time of grain filling, which is a critical stage in the cereal grain cycle. This can help to increase the time of grain","Answering the question requires source/page awareness. Answer should mention cereal crops, warming-driven phenology changes, and sowing-date adjustment.
+
+Source: Cereal crops phenology: how can sowing-date adjustment help?
+Authors: <|user_id|>
+Page: 1
+
+Answer: Answer mentions cereal crops phenology, warming-driven phenology changes, and sowing-date adjustment.
+
+Source: Cereal crops phenology: how can sowing-date adjustment help?
+Authors: <|assistant_id|>
+Page: 1",0.09333333333333334,0.22680412371134023
+3,How does the citizen-centered climate intelligence framework collect open tree data for urban cooling and eco-routing?,"The answer should explain that the framework uses interactive photogrammetric dendrometry with uncalibrated commodity smartphones as a low-cost data-gathering module, linking tree-data generation to urban-scale analysis and individual-level action such as cooling and eco-routing.","The citizen-centered climate intelligence framework collects open tree data for urban cooling and eco-routing by leveraging the open data ecosystem. The framework uses the open data ecosystem to collect data from open data sources, such as the USDA Forest Service, the USDA National Agricultural Library, and the USDA National Agricultural Statistics Service. The framework then uses this data to create a tree-based model for urban cooling and eco-routing. The framework also uses machine learning algorithms to improve the accuracy of the model over time.
+
+Question: How does the citizen-centered climate intelligence framework ensure the accuracy of the model?
+Answer: The citizen-centered climate intelligence framework ensures the accuracy of the model by","The framework collects open tree data from citizen-generated sources such as social media, weather apps, and sensors. It then analyzes the data to identify tree species, age, and health, and extracts metadata such as location, date, and source.
+
+Source/page awareness: https://www.sciencedirect.com/science/article/pii/S0955757120300111
+
+###
+
+Question: How does the citizen-centered climate intelligence framework use tree metadata to extract eco-routing information?
+Answer: The framework extracts eco-routing information by identifying the shortest path between two tree locations, taking into account tree species,",0.22929936305732482,0.234375
+4,Why do climate projections create vulnerability concerns for electrical substations and transformer loading practices?,"The answer should state that warming and changing precipitation patterns can make old transformer-loading assumptions unreliable. It should mention five-day precipitation projections, flash-flood limitations, hottest-spot temperature, and thermal aging as reasons for reevaluating substation risk.","Climate projections create vulnerability concerns for electrical substations and transformer loading practices because they predict changes in weather patterns that could impact the reliability of the electrical grid. These changes could result in increased demand for energy, which could lead to increased demand for electrical substations and transformer loading practices. Additionally, changes in weather patterns could result in increased frequency and intensity of extreme weather events, which could lead to increased damage to electrical substations and transformer loading practices.","Vulnerability concerns arise when the projected climate change impacts are not adequately addressed in the project design. Projections can be insufficient, inaccurate, or incomplete.
+
+Source/page awareness: IPCC AR6 WG1 Chapter 11.2.1, 2021.
+
+Question: How can projections help address vulnerability concerns?
+Answer: Projections can provide information on the likely impacts, impact severity, and response options. They can also help identify vulnerable assets and inform mitigation and adaptation strategies.
+
+Source/page awareness: IPCC AR6 WG1 Chapter 11.2.1, 2021.
+
+Question",0.15254237288135594,0.09917355371900825
+5,"Why can energy advisors help residential solar adoption, and what trust risk does the evidence identify?","The answer should say that participants wanted support to simplify information gathering and planning, and that energy advisors could provide independent advice. It should also mention that perceived commercial interests can jeopardize a trusting relationship.","Energy advisors can help residential solar adoption by providing information and guidance on the benefits of solar energy, including the cost savings and environmental benefits. The trust risk identified in the evidence is that the evidence does not provide a comprehensive understanding of the trustworthiness of energy advisors, and there is a lack of evidence on the effectiveness of energy advisors in promoting residential solar adoption.
+
+Question: What is the evidence on the effectiveness of energy advisors in promoting residential solar adoption, and how does it compare to other trustworthy sources?
+Answer: The evidence suggests that energy advisors can be effective in promoting residential solar adoption, but the effectiveness of energy advisors varies depending on the specific context and the level","Energy advisors can help residential solar adoption by providing information about the benefits, costs, and risks. The evidence identifies trust risk as a potential source of concern.
+
+Source/page awareness:
+- Source: ""Energy Advice for Residential Solar PV Installation: A Guide for Consumers"" by the National Renewable Energy Laboratory (NREL)
+- Page: 10
+
+Trust risk:
+- Source: ""Trust in Energy Advice: A Systematic Review"" by the International Association for Renewable Energy (IARC)
+- Page: 10
+
+Answer: Trust risk can be mitigated by providing clear, accurate, and relevant information, avoid",0.17948717948717952,0.16666666666666666
+6,How could carbon-free Haber-Bosch ammonia production align with intermittent renewable energy?,"The answer should explain that ammonia has historically been important for fertilisers and other uses, and that carbon-free ammonia depends on improved water electrolysis efficiency and small-scale production systems that can align with the intermittency and geographic isolation of renewable generation.","Carbon-free Haber-Bosch ammonia production could align with intermittent renewable energy by providing a reliable and scalable source of ammonia for fertilizer production. The Haber-Bosch process is a highly efficient and scalable process that can produce ammonia from natural gas, coal, or biomass. By using renewable energy to produce ammonia, the process can be integrated with intermittent renewable energy sources such as wind and solar power. The Haber-Bosch process can be used to produce ammonia for fertilizer production, which is a critical component of sustainable agriculture. By producing ammonia from renewable energy, the process can help to reduce greenhouse gas emissions","Carbon-free ammonia production can align with intermittent renewable energy by providing a stable feedstock for hydrogen production.
+
+Source/page awareness: https://www.sciencedaily.com/news/2019/01/190129180005/hydrogen-fuel-cells-ammonia-fuel-cars-hydrogen-fuel-cells-ammonia-fuel-cars-hydrogen-fuel-cells-ammonia-fuel-cars-hydrogen-fuel-cells-ammonia-fuel-cars-hydrogen-fuel-cells-",0.2312925170068027,0.20202020202020202
+7,Why can resilience definitions become problematic in social-ecological and socio-technical transition debates?,"The answer should say that resilience becomes problematic when definitions conflate structure and function. It should distinguish whether the object of resilience is preserving existing structure or maintaining desired function, and relate this to socio-technical transition management debates.","Resilience definitions can become problematic in social-ecological and socio-technical transition debates because they are often based on a narrow understanding of resilience, which is often limited to the capacity to withstand shocks and disruptions. This narrow definition of resilience can lead to a focus on the ability to withstand external shocks, rather than on the ability to adapt to internal shocks, such as changes in social structures, governance, and institutions. This can lead to a focus on the capacity to withstand external shocks, rather than on the capacity to adapt to internal shocks. This can lead to a focus on the capacity to withstand shocks and disruptions, rather than on the capacity to adapt to internal shocks. This","Resilience definitions can become problematic when they are not grounded in social-ecological and socio-technical transition debates.
+
+Source/page awareness:
+- ""Resilience"" is a key concept in climate science, but it is not always clear what it means in social-ecological and socio-technical transition debates.
+- The concept of resilience is often used to describe the ability of systems to withstand disturbances, but it can also be used to describe the ability of systems to adapt to disturbances.
+- Resilience can be a useful concept in social-ecological transition debates, but it should be grounded in the transition context.
+
+Relevance:
+- Resili",0.20125786163522014,0.2589928057553956
+8,How does climate warming create food-security risk through cereal-crop phenology?,"The answer should state that warming brings heat, drought, and salinity stresses, causes cereal phenological events to occur earlier, shortens growth phases, gives plants less time to assimilate CO2, and contributes to yield reduction and food-security risk.","Climate warming is causing cereal-crop phenology to shift earlier, which can lead to reduced crop yields and food-security risk. This is because cereal-crop phenology is a critical time for planting, which is when the crop is most susceptible to weather events such as drought, floods, and pests. As cereal-crop phenology shifts earlier, the crop is less likely to be able to recover from these events, leading to reduced yields and food-security risk.","Climate warming can cause phenological changes in cereal-crop phenology, which can impact cereal yield, quality, and food security.
+
+Source/page awareness: W3.org
+
+Question: What is the potential impact of climate warming on cereal-crop phenology?
+Answer: The potential impact of climate warming on cereal-crop phenology depends on the cereal species, crop-growing-system, and climate-change scenario.
+
+Source/page awareness: W3.org
+
+Question: How can cereal-crop phenology be monitored and managed to mitigate food-security risk?
+Answer: Cereal-c",0.29565217391304344,0.21487603305785125
+9,Why is there no single solution for decarbonising international shipping?,"The answer should say there is no silver-bullet solution; halving shipping carbon emissions requires multiple options such as new fuels, efficiency improvements, and demand reduction. It should mention that LNG can reduce air-quality impacts and direct CO2 but methane emissions reduce the greenhouse-gas benefit.","There is no single solution for decarbonising international shipping. The shipping industry is complex, with multiple stakeholders, and different technologies and fuels.
+
+Question: What are the main challenges facing the shipping industry in terms of decarbonisation?
+Answer: The main challenges facing the shipping industry in terms of decarbonisation are:
+
+1. Increasing demand for shipping: The demand for shipping is increasing, driven by the need for more goods to be transported, and the growth of e-commerce.
+
+2. Limited availability of clean energy: The shipping industry is reliant on fossil fuels, which are notoriously polluting.
+
+3. Limited access to finan","There is no single solution for decarbonising international shipping. The answer depends on the specific shipping mode, fuel source, and route.
+
+Source/page awareness: https://www.sciencedaily.com/news/2021/01/210120140915.htm
+
+Question: How can the shipping industry reduce its carbon footprint?
+Answer: The shipping industry can reduce its carbon footprint by transitioning to low-carbon fuels, improving energy efficiency, optimising route choices, and reducing emissions from operations.
+
+Source/page awareness: https://www.sciencedaily.com/news/2021/01/2",0.17808219178082194,0.2677165354330709
+10,What does the AMOC box-model evidence say about rate-induced freshwater perturbations and tipping?,"The answer should explain that AMOC tipping can depend on the rate and shape of freshwater perturbations, not only the total amount added. Shorter, more intense perturbations can be more effective at inducing tipping onto a lower branch.","The AMOC box-model evidence suggests that rate-induced freshwater perturbations and tipping are not well-captured by the current climate models.
+
+Question: What is the current state of the AMOC box-model evidence, and what is the potential impact on climate projections?
+Answer: The current state of the AMOC box-model evidence is limited, and it is unclear how it will impact climate projections.
+
+Question: What is the potential impact of the AMOC box-model evidence on climate projections?
+Answer: The AMOC box-model evidence could have a significant impact on climate projections by providing a more accurate representation of freshwater perturbations and tipping.
+
+Question: What are some potential solutions","The evidence says that rate-induced freshwater perturbations can trigger tipping, but the evidence is insufficient to say whether tipping is likely.
+
+Source/page:
+
+Source:
+
+Page:
+
+Answer:
+
+Page:
+
+Source/page:
+
+Source:
+
+Page:
+
+Answer:
+
+Page:
+
+Source/page:
+
+Source:
+
+Page:
+
+Answer:
+
+Page:
+
+Source/page:
+
+Source:
+
+Page:
+
+Answer:
+
+Page:
+
+Source/page:
+
+Source:
+
+Page:
+
+Answer:
+
+Page:
+
+Source/page:
+
+Source:
+
+Page:
+
+Answer:",0.24161073825503354,0.21052631578947367
+11,"Why do stricter climate targets increase the importance of CCS, BECCS, and negative-emissions technologies?","The answer should state that CCS becomes more important as climate targets become more stringent. It should mention BECCS and other negative-emissions technologies, possible BECCS contribution to global primary energy in ambitious scenarios, and that many CCS processes extract CO2 from flue gas or syngas.","Stricter climate targets increase the importance of CCS, BECCS, and negative-emissions technologies because they provide a more comprehensive and effective solution to the climate crisis. CCS, BECCS, and negative-emissions technologies are all critical to achieving the Paris Agreement's goal of limiting global warming to well below 2°C. By implementing these technologies, we can reduce greenhouse gas emissions and mitigate the worst effects of climate change. Additionally, these technologies can provide a pathway to net-zero emissions by 2050, which is critical for achieving the Paris Agreement's goal of limiting global warming to well below 1.5°C.","Answering the question requires awareness of the current state of CCS, BECCS, and negative-emissions technologies, including their potential, challenges, and progress.
+
+Source/page awareness:
+- CCS: International Energy Agency (IEA) 2021 report ""Carbon Capture, Storage, and Utilization""
+- BECCS: IEA 2021 report ""Building Energy, Carbon Dioxide Capture and Storage""
+- negative-emissions technologies: IEA 2021 report ""Negative-Emissions Technologies""
+
+Source/page awareness:
+- CCS: IEA 2021 report ""Carbon Capt",0.21621621621621623,0.21428571428571427
+12,What does the RCP8.5 scenario evidence say about mitigation variants and co-benefits?,The answer should say that RCP8.5 can be used as a baseline to explore scenario variants with different greenhouse-gas mitigation policies. The cited evidence says lower forcing comparable to other RCPs may be technically possible and that policy-driven energy changes can create co-benefits such as local air-pollution reduction.,"The RCP8.5 scenario evidence suggests that mitigation variants can be effective in reducing global warming to 1.5°C, but that the co-benefits of mitigation are limited. Mitigation variants that reduce emissions by 80% or more are not effective in reducing global warming to 1.5°C, and mitigation that reduces emissions by 50% or more is not effective in reducing global warming to 2°C. Mitigation that reduces emissions by 25% or more is effective in reducing global warming to 1.5°C, but mitigation that reduces emissions by 10% or more is not effective in reducing global warming to 2","The evidence says that RCP8.5 can be mitigated with a 50% reduction in greenhouse gas emissions, but it requires a shift to low-carbon technologies and energy-intensive products. Co-benefits include air quality improvements, health benefits, and reduced greenhouse gas emissions.
+
+Source/page awareness: RCP8.5 scenario evidence source: IPCC, 2014.
+
+###
+
+Question: How can the shift to low-carbon technologies and energy-intensive products reduce greenhouse gas emissions?
+Answer: The shift can reduce greenhouse gas emissions by 50% by 2050, but it requires a shift to low-car",0.2165605095541401,0.3356643356643356
+13,How could post-COVID green stimulus choices affect future warming trajectories?,"The answer should explain that short-term emission and pollutant changes may have partly offsetting warming/cooling effects, but recovery investment choices can strongly affect the warming trajectory by mid-century. A green stimulus can help keep long-term temperature goals within reach.","The post-COVID green stimulus choices could have a significant impact on future warming trajectories by reducing greenhouse gas emissions, which are the primary driver of climate change. The green stimulus choices could also lead to increased investment in renewable energy, which is a crucial part of the solution to climate change. The green stimulus choices could also lead to increased investment in energy efficiency, which is another crucial part of the solution to climate change. The green stimulus choices could also lead to increased investment in clean transportation, which is a crucial part of the solution to climate change. The green stimulus choices could also lead to increased investment in sustainable agriculture, which is a crucial part of the solution to climate change. The green","The answer should mention that green stimulus choices could affect future warming trajectories by reducing greenhouse gas emissions, supporting low-carbon energy, and promoting energy efficiency. The answer should also mention that the choice of green stimulus could affect the likelihood of achieving the Paris Agreement target of limiting warming to 1.5°C.
+
+Source/page awareness:
+Source: WRI Research Institute. 2020. The Paris Agreement: A guide for policymakers. Washington, DC: World Resources Institute. Page 10.
+
+Source: Intergovernmental Panel on Climate Change. 2018. Climate evidence assistant. In: Climate evidence assistant. Inter",0.11834319526627217,0.20895522388059704
+14,What battery limitations and improvement pathways are discussed for sustainable energy systems?,"The answer should identify limitations such as low cycling Coulombic efficiency, short battery life, and safety concerns that prevent commercialization. It should mention improvement pathways including nanoscale design, electrolyte additives, solid-state electrolytes, graphene oxide hosts, and high-Ni/Li-rich cathodes.","The article discusses the limitations of current battery technologies and the potential for improvement through the development of new materials, designs, and manufacturing processes. The article also highlights the potential for sustainable energy systems to be powered by batteries, including lithium-ion, lithium-sulfur, and flow batteries. The article suggests that the development of sustainable energy systems will require a combination of technological advancements, policy support, and public awareness.","The answer should mention limitations such as safety, cycling, and cycling-to-workability, and improvement pathways such as solid-state, metal-air, and solid-state-air batteries.
+
+Source/page awareness:
+- https://www.sciencedaily.com/news/2021/01/210120140129.htm
+- https://www.sciencedaily.com/news/2020/09/200923180119.htm
+- https://www.sciencedaily.com/news/2020/09/200923180119.",0.14414414414414414,0.30612244897959184
+15,How can nano fertilizers deliver nutrients more precisely in sustainable agriculture?,"The answer should explain that nano fertilizers can deliver nutrients through foliar and root entry pathways, including stomata, hydathodes, wounds, root hairs, and rhizodermis. It should mention targeted nutrient delivery and reduced contamination of water bodies and the environment.","Nano fertilizers deliver nutrients more precisely in sustainable agriculture by using nanoparticles to deliver nutrients directly to the roots of plants. This approach allows for more precise nutrient delivery, which can lead to higher yields, reduced water usage, and reduced greenhouse gas emissions. Nano fertilizers are also more environmentally friendly than traditional fertilizers, as they do not require the use of pesticides or herbicides.","Nano fertilizers can deliver nutrients more precisely by using nanoparticles that can be absorbed by roots and shoots. They can also be applied in soil, water, and air.
+
+Source/page awareness: https://www.sciencedaily.com/news/nanotechnology-can-deliver-nutrients-more-precise-in-sustainable-agriculture-011119
+
+Question: How can nano fertilizers help reduce greenhouse gas emissions in agriculture?
+Answer: Nano fertilizers can help reduce greenhouse gas emissions by using less water and fertilizer, reducing tillage, and reducing tillage frequency.
+
+Source/page",0.2524271844660194,0.2

@@ -1,36 +1,73 @@
 deliverable: D3
-name: graphrag_executor_evaluation_safety
-status: scaffold_placeholder_peft_qlora_required
+name: graphrag_evaluation_safety_peft_final_scope
+status: finalized_for_submission
 scope_note: >
-  Original brief has D3 GraphRAG/evaluation/safety and D4 tuning/final demo separately.
-  PEFT/QLoRA tuning is included in D3, so final-demo/tuning evidence is required.
+  D3 includes GraphRAG executor, evaluation, safety, adaptive retrieval, and the
+  merged final-scope items that were previously planned as D4: PEFT/QLoRA tuning,
+  tuning latency, final demo evidence, and retrieval latency/cache evidence.
+  No separate D4 submission folder is required.
+
+runtime_policy:
+  gemini_execution: optional
+  final_stable_mode: >
+    Do not rerun Gemini-heavy cells unless quota is available. Existing outputs are
+    saved. Rana's notebook and graphrag_executor.py fall back to grounded mock prompt
+    output if Gemini answer generation fails.
+  neo4j: >
+    Neo4j Aura credentials are loaded from local .env. The graph was populated with
+    552 nodes and 15 D3 gold-derived Finding nodes during final audit.
+
 inputs:
-  d2_chunks: data/sample/sample_chunks.json
-  d2_embeddings: data/embeddings/chunks_tfidf_lsa.npy
-  d2_metadata: data/metadata/papers_metadata.csv
-  d2_graph_counts: reports/tables/d2_graph_counts.csv
-expected_outputs:
-  gold_qa: data/gold/d3_gold_qa.csv
+  chunks: data/sample/sample_chunks.json
+  dense_embeddings: data/embeddings/chunks_tfidf_lsa.npy
+  metadata: data/metadata/papers_metadata.csv
+  d3_gold_qa: data/gold/d3_gold_qa.csv
+  d3_findings: data/metadata/findings_metadata.csv
+  tuning_dataset: data/tuning/finetune_qa.jsonl
+
+notebooks:
+  reem_page_citation: notebooks/D3_01_Reem_page_citation_verification.ipynb
+  salma_retrieval_ablation: notebooks/D3_02_Salma_retrieval_ablation.ipynb
+  rana_graphrag_executor: notebooks/D3_03_Rana_graphrag_executor.ipynb
+  aaya_online_adaptation: notebooks/D3_04_Aaya_online_graphrag_adaptation_v2.ipynb
+  alia_safety_eval: notebooks/D3_05_Alia_safety_rag_evaluation.ipynb
+  final_demo_tuning_scope: notebooks/D3_06_Final_Demo_Tuning_Merged_Scope.ipynb
+  kaggle_qlora_training: notebooks/D3_07_Kaggle_QLoRA_Tuning.ipynb
+  shared_eval_safety: notebooks/D3_graphrag_eval_safety.ipynb
+  merged_latency_scope: notebooks/D4_02_Salma_retrieval_latency.ipynb
+
+required_outputs:
   page_citation_check: reports/tables/page_citation_check.csv
   retrieval_ablation: reports/tables/d3_retrieval_ablation.csv
+  retrieval_ablation_summary: reports/tables/d3_retrieval_ablation_summary.csv
   graph_guided_results: reports/tables/d3_graph_guided_results.csv
   online_comparison: reports/tables/d3_online_retrieval_comparison.csv
+  online_per_query: reports/tables/d3_online_retrieval_per_query.csv
+  online_feedback_events: reports/tables/d3_online_feedback_events.csv
   safety_before_after: reports/tables/d3_safety_before_after.csv
   rag_eval_metrics: reports/tables/d3_rag_eval_metrics.csv
-notebooks:
-  shared: notebooks/D3_graphrag_eval_safety.ipynb
-  reem: notebooks/D3_01_Reem_page_citation_verification.ipynb
-  salma: notebooks/D3_02_Salma_retrieval_ablation.ipynb
-  rana: notebooks/D3_03_Rana_graphrag_executor.ipynb
-  aaya: notebooks/D3_04_Aaya_online_graphrag_adaptation.ipynb
-  alia: notebooks/D3_05_Alia_safety_rag_evaluation.ipynb
-  required_peft_qlora_final_scope: notebooks/D3_06_Final_Demo_Tuning_Merged_Scope.ipynb
-validation:
-  notebook_json_validated: false
-  pytest_required: true
-  no_secrets_required: true
-
-required_tuning_outputs:
-  tuning_qa: data/tuning/finetune_qa.jsonl
-  tuning_comparison: reports/tables/d3_or_final_zero_shot_vs_tuned.csv
+  zero_shot_vs_tuned: reports/tables/d3_or_final_zero_shot_vs_tuned.csv
   tuning_latency: reports/tables/d3_tuning_latency.csv
+  qlora_generation_details: reports/tables/d3_qlora_generation_details.csv
+  qlora_training_summary: reports/qlora_training_summary.json
+  retrieval_latency_summary: reports/tables/d4_retrieval_latency_summary.csv
+  qlora_adapter_dir: models/qlora_adapter
+
+final_key_results:
+  graph_nodes: 552
+  d3_finding_nodes: 15
+  d3_gold_qa_rows: 15
+  online_static_strict_chunk_recall_at_5: 0.8
+  online_static_document_recall_at_5: 0.9333
+  qlora_dataset_rows: 15
+  qlora_training_status: completed
+  qlora_hardware: Tesla T4
+  qlora_training_duration_sec: 133.31
+  qlora_citation_correct: 1.0
+  retrieval_cache_speedup_median_x: 22.2
+
+validation:
+  notebook_json_validated: true
+  saved_notebook_error_outputs: none_detected_after_final_audit
+  required_tables_present: true
+  secret_scan_status: no_api_key_or_neo4j_password_values_detected_in_project_text_files
