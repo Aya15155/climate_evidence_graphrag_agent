@@ -17,6 +17,7 @@ Run locally:
 Optional, to light up the full graph-guided + real-LLM-answer path:
     docker compose up -d neo4j        # or use a Neo4j Aura free instance
     export GEMINI_API_KEY=your_key    # enables real generated answers
+    export GEMINI_MODEL=gemini-3.1-flash-lite  # optional; this is the default primary model
 
 Without those two, the app still runs end-to-end: GraphRAGExecutor.run()
 already catches Neo4j connection errors internally and falls back to
@@ -48,12 +49,20 @@ TABLES_DIR = PROJECT_ROOT / "reports" / "tables"
 FIGURES_DIR = PROJECT_ROOT / "reports" / "figures"
 
 # Reuse the project's own tiny .env loader (no extra dependency needed) so
-# NEO4J_*/GEMINI_API_KEY set in a local .env file are picked up app-wide.
+# NEO4J_*/GEMINI_API_KEY/GEMINI_MODEL set in a local .env file are picked up app-wide
+# before the app computes display/config values.
 try:
     from src.rag.graphrag_executor import load_local_env
-    load_local_env(PROJECT_ROOT, override=False)
+    load_local_env(PROJECT_ROOT, override=True)
 except Exception:
     pass
+
+PRIMARY_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
+GEMINI_FALLBACK_MODELS = [
+    m.strip()
+    for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-2.5-flash-lite,gemini-2.5-flash,gemini-1.5-flash").split(",")
+    if m.strip()
+]
 
 st.set_page_config(
     page_title="Climate Evidence GraphRAG Agent",
@@ -111,12 +120,15 @@ def neo4j_status() -> tuple[bool, str]:
     try:
         from neo4j import GraphDatabase
         uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-        user = os.getenv("NEO4J_USER", "neo4j")
+        user = os.getenv("NEO4J_USER") or os.getenv("NEO4J_USERNAME", "neo4j")
         pwd = os.getenv("NEO4J_PASSWORD", "climate123")
+        database = os.getenv("NEO4J_DATABASE")
         driver = GraphDatabase.driver(uri, auth=(user, pwd))
-        driver.verify_connectivity()
+        with (driver.session(database=database) if database else driver.session()) as session:
+            node_count = session.run("MATCH (n) RETURN count(n) AS c").single()["c"]
         driver.close()
-        return True, uri
+        safe_uri = uri.split("://", 1)[0] + "://[redacted]" if "://" in uri else "[redacted]"
+        return True, f"{safe_uri}; nodes={node_count}"
     except Exception as exc:
         return False, str(exc)
 
@@ -173,6 +185,11 @@ with st.sidebar:
             st.success(f"Neo4j connected ({neo4j_info})")
         else:
             st.warning("Neo4j not reachable \u2014 graph-guided mode will fall back to hybrid retrieval.")
+
+    st.caption("LLM config: Gemini 3.1 Flash Lite primary with retry/fallback to lighter Gemini models.")
+    st.caption(f"Primary model: `{PRIMARY_GEMINI_MODEL}`")
+    if GEMINI_FALLBACK_MODELS:
+        st.caption("Fallback models: " + ", ".join(f"`{m}`" for m in GEMINI_FALLBACK_MODELS))
 
     gemini_set = bool(os.getenv("GEMINI_API_KEY"))
     if gemini_set:
@@ -356,7 +373,7 @@ with tab_d3:
             "Checked every citation in the GraphRAG answers against the real corpus: does the cited "
             "document exist, is the page in range, does the chunk text actually look substantial?"
         )
-        metric_row([("Citations checked", "187"), ("Valid", "77.5%"), ("Flagged", "22.5%")])
+        metric_row([("Citation rows checked", "198"), ("Valid", "73.2%"), ("Flagged", "26.8%")])
         st.warning(
             "**Honest finding:** some citations failed verification because a page-number field "
             "accidentally held the document's **publication year** instead of a real page number "
@@ -430,12 +447,12 @@ with tab_demo:
         st.error("Can't run the live demo without the chunk corpus. See the sidebar error for the fix (usually `git lfs pull`).")
     else:
         examples = [
-            ("\U0001F1E6\U0001F1EA Country \u2192 Policy \u2192 Target (success)", "What renewable energy targets has the UAE committed to under its Net Zero 2050 strategy?"),
-            ("\U0001F525 Risk \u2192 Sector \u2192 Evidence (success)", "What high-confidence climate risks in the MENA region are documented by findings, and which sectors do they impact?"),
-            ("\u2699\uFE0F Technology \u2192 Mitigates \u2192 Risk (success)", "Which technologies mitigate heatwave risk in the energy sector according to climate literature?"),
-            ("\u274C Failure: too-broad question", "How much has global mean temperature risen since pre-industrial times?"),
-            ("\u274C Failure: missing entity", "List all climate adaptation policies adopted by Pacific Islands countries for coastal flooding."),
-            ("\u274C Failure: graph adds no value", "What does the literature say about gradient boosting methods for wind power forecasting?"),
+            ("Energy dataset evidence", "What makes the FeederBW low-voltage grid dataset useful for energy-transition planning research?"),
+            ("Crop adaptation evidence", "How can sowing-date adjustment help cereal crops respond to warming-driven phenology changes?"),
+            ("Grid resilience evidence", "Why do climate projections create vulnerability concerns for electrical substations and transformer loading practices?"),
+            ("Carbon-free ammonia evidence", "How could carbon-free Haber-Bosch ammonia production align with intermittent renewable energy?"),
+            ("Green recovery evidence", "How could post-COVID green stimulus choices affect future warming trajectories?"),
+            ("Hybrid fallback: ML method", "What does the literature say about gradient boosting methods for wind power forecasting?"),
         ]
 
         st.markdown("**Pick a validated example:**")

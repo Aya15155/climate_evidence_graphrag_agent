@@ -974,7 +974,7 @@ class AnswerGenerator:
 
     The PromptBuilder produces the two-section context block.
     The CitationBuilder resolves chunk metadata to page citations.
-    Gemini 2.5 Flash generates the answer with citation references embedded.
+    Gemini 3.1 Flash Lite is the primary answer model, with retry/fallback models for quota or transient failures.
     """
 
     def __init__(
@@ -982,13 +982,24 @@ class AnswerGenerator:
         prompt_builder,
         citation_builder,
         gemini_api_key: Optional[str] = None,
-        model: str = "gemini-2.5-flash",
+        model: str = "gemini-3.1-flash-lite",
         max_tokens: int = 1024,
+        fallback_models: Optional[List[str]] = None,
+        retry_attempts: int = 2,
+        retry_base_wait_sec: float = 2.0,
     ):
         self.prompt_builder = prompt_builder
         self.citation_builder = citation_builder
         self.gemini_api_key = gemini_api_key or os.getenv("GEMINI_API_KEY", "")
-        self.model = model
+        self.model = os.getenv("GEMINI_MODEL", model)
+        fallback_env = os.getenv("GEMINI_FALLBACK_MODELS", "")
+        if fallback_models is None and fallback_env.strip():
+            fallback_models = [m.strip() for m in fallback_env.split(",") if m.strip()]
+        if fallback_models is None:
+            fallback_models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-1.5-flash"]
+        self.fallback_models = [m for m in fallback_models if m and m != self.model]
+        self.retry_attempts = max(1, int(os.getenv("GEMINI_RETRY_ATTEMPTS", retry_attempts)))
+        self.retry_base_wait_sec = float(os.getenv("GEMINI_RETRY_BASE_WAIT_SEC", retry_base_wait_sec))
         self.max_tokens = max_tokens
 
     def generate(
@@ -1012,7 +1023,7 @@ class AnswerGenerator:
 
         if not self.gemini_api_key:
             LOGGER.warning("No GEMINI_API_KEY found; returning prompt as mock answer.")
-            return f"[MOCK — no API key]\n\n{prompt[:500]}", [c["citation_string"] for c in citations]
+            return f"[MOCK - no API key]\n\n{prompt[:500]}", [c["citation_string"] for c in citations]
 
         try:
             answer = self._call_gemini(prompt)
@@ -1035,15 +1046,48 @@ class AnswerGenerator:
                 "maxOutputTokens": self.max_tokens,
             },
         }
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent"
-        resp = requests.post(
-            url,
-            headers={"x-goog-api-key": self.gemini_api_key},
-            json=payload,
-            timeout=30,
-        )
-        resp.raise_for_status()
-        return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+        models_to_try = [self.model] + [m for m in self.fallback_models if m != self.model]
+        transient_statuses = {408, 429, 500, 502, 503, 504}
+        fallback_statuses = {400, 403, 404}
+        last_error = None
+
+        for model in models_to_try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+            for attempt in range(1, self.retry_attempts + 1):
+                try:
+                    resp = requests.post(
+                        url,
+                        headers={"x-goog-api-key": self.gemini_api_key},
+                        json=payload,
+                        timeout=30,
+                    )
+                    if resp.status_code == 200:
+                        return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+
+                    last_error = f"{resp.status_code} for {model}: {redact_sensitive_text(resp.text[:300])}"
+                    if resp.status_code in transient_statuses and attempt < self.retry_attempts:
+                        retry_after = resp.headers.get("Retry-After")
+                        wait_sec = float(retry_after) if retry_after and str(retry_after).replace('.', '', 1).isdigit() else self.retry_base_wait_sec * attempt
+                        LOGGER.warning("Gemini %s returned HTTP %s; retry %s/%s after %.1fs.", model, resp.status_code, attempt, self.retry_attempts, wait_sec)
+                        time.sleep(wait_sec)
+                        continue
+
+                    if resp.status_code in transient_statuses | fallback_statuses:
+                        LOGGER.warning("Gemini model %s failed with HTTP %s; trying fallback model if available.", model, resp.status_code)
+                        break
+
+                    resp.raise_for_status()
+                except Exception as exc:
+                    last_error = redact_sensitive_text(exc)
+                    if attempt < self.retry_attempts:
+                        wait_sec = self.retry_base_wait_sec * attempt
+                        LOGGER.warning("Gemini %s call failed (%s); retry %s/%s after %.1fs.", model, redact_sensitive_text(exc), attempt, self.retry_attempts, wait_sec)
+                        time.sleep(wait_sec)
+                        continue
+                    LOGGER.warning("Gemini model %s exhausted retries; trying fallback model if available.", model)
+                    break
+
+        raise RuntimeError(f"Gemini models exhausted. Tried {models_to_try}. Last error: {last_error}")
 
 
 # ---------------------------------------------------------------------------
